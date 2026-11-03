@@ -1,0 +1,1498 @@
+<!DOCTYPE html><html lang="zh-CN" data-lvt-canonical="1"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>万店慧招 · AI招商总部（v2）</title>
+<!--
+Canvas: 响应式长滚动页（桌面 ≥1200 按 1920 规格，手机 ≤768 按 375 规格；13 个满屏 section + 底部转化区）
+Design given: 苹果风白底极简发布页——白底大留白、极淡冷色光晕、黑粗超大标题、蓝紫粉渐变仅做强调（渐变文字/短线/编号/主按钮/图标描边）、浅灰圆角卡；固定毛玻璃顶部导航（万店慧招｜首页/应用场景/定价/技能/教学｜预约诊断+登录）；13 屏案例照片（同一 URL），滚动入场动效、错峰 stagger、键盘导航、F 键全屏。
+Asset map: case_photo https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png (1920×1080, 16:9) -> v2 共 14 处复用：S1 不再使用图片；S3/S7 各两张并列（.duo-banner，见 ⑪）；其余统一 .photo-card>.case-photo（圆角24/手机18、object-fit:cover、投影 0 24px 70px rgba(20,20,60,.14)、hover scale1.03 500ms、毛玻璃「案例」标签 18px 内缩）；
+  S2 居中 16:9 图卡 max-w var(--w-center):604（=栅格 6 列跨距）；S4 右图 47% 4:3 + 图底毛玻璃五阶段 pill 条（桌面 pill 15px/7px 18px，依次点亮 stagger120ms）；S5 右图 47% stretch 与左列顶底对齐 + 中央 CSS 同心脉冲光点（3s 呼吸）；S6 左六卡右图 47% 与左列顶底对齐等高（stretch）；S8 左三卡右图 47% stretch；S9 时间轴下 16:9 图卡 max-w var(--w-center):604；S10/11/12 左文右图 47% 4:3 stretch 顶缘对齐、结论句 margin-top:auto；S13 左文右图 47% stretch 顶底对齐。手机一律通栏 16:9 图卡，S6 图移至六卡后。全部 lazy（v2 首屏无图，无 eager）。
+Palette: bg #ffffff -> --bg；章节浅灰 #f5f5f7 -> --bg-soft（S4/S7/S11/S13+底部）；白章节卡 #f6f6f8 -> --card；主文字 #14141a -> --ink；次级 #6e6e73 -> --ink-2；弱化 #9a9aa0 -> --ink-3；编号 #c7c7cc -> --num；边框 #d2d2d7 -> --line、#e8e8ea -> --line-soft；品牌渐变 90deg #4f8cff→55% #a855f7→#ff6fa5 -> --grad；光晕 rgba(89,139,255,.07)/rgba(168,99,255,.06)/rgba(255,111,170,.05)（均给定）；S4 pill 条 rgba(10,16,32,.42)、脉冲环 rgba(120,180,255,.55)、「案例」标签/图注 rgba(255,255,255,.72)（均给定）。
+Typography: 系统栈 -apple-system,"SF Pro Display","SF Pro Text","PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif（给定，零外部字体）；标题 800–900，次级 22–32px，卡片题 24–26px，芯片 21px/600，全部 clamp() 流式。
+Content map: 导航/13 屏文案/底部 CTA 全部逐字取自 Pinned Content（见各 section）；图上仅「案例」标签 + v2 新增「案例一」「案例二」小图注 + S4 阶段 pill（线索→签约→回款→开业→存活）+ S9 时间轴节点为 spec 指定的结构化标签。
+Assumptions: ① 全部 h1/h2 级大标题去句末「。」（逗号保留）；非大标题的完整句保留「。」；「每一步，都留痕。」为 S5 独立渐变句；S6/S8 底部两句各并为一行（nowrap）；S7 芯片末位为「协作官」；② 眉标仅 S1（AI 招商总部）与 S10–12（1.0/2.0/3.0 渐变胶囊）有文字，其余屏仅渐变短线装饰；③ mini 卡圆角 16px；④ 章节桌面 padding 92px 72px 88px（#s1 130/72/110）/ 手机 76px 22px（#s1 88/22）；⑤ 键盘翻页含底部 CTA 为最后一页。
+⑧ 第四轮：以 S5 为全站基准统一 S2–S13——wrap 1240、大标题 clamp(38,4.8vw,72)、侧图右列 47%、居中 16:9 图卡 max-w620、密集屏统一紧凑卡档。
+⑨ 第五轮：仅 S3 文字调小——#s3 作用域：大标题桌面 clamp(32,3.8vw,58)、1199 档 clamp(30,4.4vw,48)、手机 clamp(26,6.8vw,30)；四卡标题桌面 clamp(15,1.3vw,21)、手机 clamp(16,4.3vw,18)；卡内图标桌面 44、手机 40。
+⑩ 第六轮：S7/S9 文字整体调小，两屏图片不动——大标题同 ⑨ 档；S7 副句与主标题同 h2 同档；S7 芯片桌面 clamp(13,1.05vw,16.5)/padding 10px 16px/gap 9/圆点 14/网格 gap 10，手机 clamp(13,3.7vw,14)/padding 11px 14px；S9 圆点 19、节点文字桌面 clamp(13,1.13vw,16)/手机 14px、s9-lines/s9-end 桌面 clamp(16,1.3vw,21)/手机 14px。
+⑪ 本轮（v2，基于旧版复制新建，旧版 wandian-huizhao-site/index.html 一字未动）：仅三处差异——
+  (1) S1 首页去掉右侧案例大图与三块漂浮玻璃面板（DOM/CSS 已删），全部内容水平居中：眉标/主标题/副句/双 CTA 居中排列，标题区为视觉中心，CTA 距标题区 56px（brief 允许 48–64），主标题保持 hero 档 clamp(44,6.4vw,92) 不缩小，行距放宽至 1.16/1.65 使居中舒展，背景光晕保留；手机端同样居中，CTA 并排 flex:1 缩小不溢出；「了解更多」仍 data-goto="s2" 平滑滚动。
+  (2) S3 居中排版：眉标短线居中、大标题（两行）text-align:center；四卡网格仍全宽（wrap 1240 内即天然与内容区左右边线对齐）；原 620px 单图改为 .duo-banner 两张并列 16:9 图卡——display:grid 1fr 1fr，桌面 gap var(--gap-grid):32px 与 .s3-grid 列 gap 相同、总宽=四卡网格总宽（同 wrap 左右边线，第七轮已共享栅格 token），每张图宽≈两张卡+一个 gap；圆角/投影/「案例」标签与现有图卡一致，另加左下角毛玻璃小图注「案例一」「案例二」（样式同「案例」标签，13px/rgba(255,255,255,.72)/blur14，内缩 18px/手机 14px）；手机端 grid 单列上下堆叠通栏 16:9、gap 16px 同手机卡网格；两图错峰入场 stagger 100ms（--d:200ms/300ms）。
+  (3) S7 标题区原本已居中（保持），11 芯片网格样式与缩小档不动；原 620px 单图同样改为 .duo-banner 两张并列 16:9 图卡，总宽=芯片网格总宽（同 wrap 边线），gap 同 --gap-grid（第七轮芯片改 4 列栅格后两者天然同列宽同 gap），标签/图注/圆角/投影/错峰入场规则与 S3 完全一致（同 URL、案例一/案例二）。
+  其余 13 屏内容、文案、配色、字号档位、动效、导航、进度条、键盘、F 全屏、手机适配与旧版逐字一致。
+⑫ 本轮（仅 S1，桌面+手机）：
+  (1) 主标题放大：.s1-title 由 clamp(44,6.4vw,92)/lh1.16 上调至 clamp(52,7.6vw,124)/lh1.06（字重 900、第二行 grad-text 不变；1366 处 7.6vw≈104px、1440≈109px、1920 封顶 124px，均不折行）；1199 档同步 clamp(48,8vw,92)；手机档 clamp(38,11.4vw,46) 上调至 clamp(44,13.2vw,54)/lh1.06（375px≈49.5px，「AI招商总部」6 字≈300px < 331px 内容宽，不溢出、无单字折行）。
+  (2) 眉标改左右渐变横线：S1 eyebrow 内「AI 招商总部」小字（字号/颜色不变）左右各一条 2px 渐变线（左线 rgba(79,140,255,0)→#4f8cff→#a855f7→#ff6fa5，右线镜像透明收尾，视觉对称），桌面线长 64px/间距 22px，手机 36px/14px；原单侧 3px 短线仅在 #s1 作用域覆盖，其他屏 .e-line 不受影响；线随 eyebrow 整体 reveal 淡入。
+  (3) 组间距拉开约 30%：眉标→标题 28→36px，标题→副句 26→34px，副句→CTA 56→72px（手机 18→26 / 20→28 / 44→54，增幅小于桌面）；另加 ≥901px 且高 ≤820px 矮视口档（1366×768 等）：#s1 padding 收紧为 100/80、间距回落 30/28/58，保证首屏内容不溢出、不贴导航与底部；.page 本身 flex 垂直居中保留。
+  (4) 副句/双 CTA 文案样式功能、背景光晕、入场动效 stagger 均未动；S2–S13 与旧版文件零变化。
+  (5) 机械性修复（最小调整）：.s1-center 为 align-items:center，子元素按内容收缩导致手机档 .cta-row 宽不足、flex:1 失效使主按钮「预约入企诊断」折出单字「断」；给 #s1 .cta-row 补 width:100%（桌面按钮仍按内容宽居中、视觉不变；手机两按钮 flex:1 均分一行不折行）。
+  (5b) 第八轮机械性修复：S1 眉标 .e-text 上残留的内联 style="transform:translate(-5.4px,68.1px)"（历史拖拽残留）使眉标文字下坠 68px 穿透主标题（check_design 报 1581px² 物理重叠）；删除该内联 transform，恢复已确认的「眉标小字居中、左右渐变线」设计；S1 其余版式零改动。
+⑭ 本轮（仅 v2 S1 组间距再放大约 40%，桌面+手机；标题字号/眉标横线/副句按钮样式/光晕/动效/S2–S13 全部不动）：
+  (1) 桌面组间距：眉标→标题 36→54px，标题→副句 34→50px，副句→CTA 72→106px（均在 brief 参考区间 52–56/48–52/100–112 内）；主标题两行 lh1.06、副句两行 lh1.65 行距保持现状不拉大。
+  (2) 矮视口档（≥901 宽且高 ≤820，如 1366×768）：间距回落约 25% 至 40/36/76，#s1 padding 100/80 不变，首屏内容完整可见不溢出。
+  (3) 手机端（≤768）：组间距 26→34 / 28→36 / 54→68（增幅小于桌面，按 brief 参考值）；375×667 实测内容总高≈545px（含 padding 88×2）< 667 不溢出，无需再设手机矮屏回落档（brief 允许但未触发）。
+  (4) CTA 按钮间距：桌面 #s1 .cta-row gap 16→22px（20–24 区间），手机 gap 12→14px（12–16 区间），仅作用域 #s1，其余屏 .cta-row 不受影响。
+  (5) 垂直位置：.page flex 垂直居中 + #s1 padding 上 130 下 110（手机 88/88）不变，间距加大后视觉中心仍居中偏上，不贴导航不贴底；未引入任意 margin 数字，全部走 #s1 作用域固定间距档。
+⑬ 本轮（第七轮：一套母版统一十三屏——抽 token、删屏级覆盖、共享 12 列栅格；文案/配色/图片 URL/交互逻辑/S1 版式零改动）：
+  (1) :root 新增母版 token：容器 --wrap:1240（S5 实测档）、--pad-x:72（中屏 48 / 手机 --pad-x-m:22）、内容屏垂直 --pad-t:92/--pad-b:88（S2–S13 全同，#cta 独立 120 档、#s1 独立 hero 档）；栅格 --gap-grid:32（手机 18）、行 gap --gap-row:26、双栏图文槽 --gap-split:64（中屏 44/手机 34）、侧图列 --side-col:47%；间距 --sp-block:36（区块→区块）、--sp-title-sub:20、--pad-card:28 24 / --pad-card-sm:22 20；圆角 --r-card:24 / --r-card-sm:16。
+  (2) 文字 5 档 token：--t-display（仅 S1 hero，clamp(52,7.6vw,124)，独立档不入内容屏阶梯）；--t-screen（内容屏大标题 clamp(38,4.8vw,72)/900/-0.02em/lh1.1，S2–S13 全归一，撤销 #s3/#s7/#s9 桌面+中屏+手机的标题缩小覆盖）；--t-section（次级强调句 clamp(20,1.7vw,24)/700，按 S5 留痕句实测定档，报告 24–28 与 S5 基准冲突取 S5）；--t-card 两固定值 24/700（S3 四卡、S8 三卡）与 --t-card-sm 20/700（S6 六卡、S13 阶段卡，密度屏取下限）；--t-body clamp(18,1.7vw,26)/lh1.55（副句/tail/s2-lines/s6-foot/s9 结句）；--t-small clamp(14,1.15vw,16)（S9 节点文字、眉标小字）；芯片/pill 统一 --t-chip clamp(16,1.25vw,17)。手机档：屏标题 clamp(30,8vw,34)（S1 hero 44–54 除外）、卡题 clamp(17,4.6vw,18)、紧凑卡题 16、正文 ≥16、小字 14——维持「手机文字不回调变大」。
+  (3) 栅格统一：S3 四卡=4×3 列 gap 32，其下 .duo-banner 两图=2×6 列 gap 32，同为 .wrap 直接子元素全宽 grid——图左缘=首卡左缘、右缘=末卡右缘（每图 604=2×286 卡宽+32 gap，数学严格对齐），删除手测值；S7 芯片改 repeat(4,1fr) 列 gap 32/行 gap 20+padding 11px（密集屏唯一例外档，报告允许收紧卡片/间距），11 芯片 4+4+3，三行左缘与下方两图对齐，删除 #s7 芯片 gap10/字号 13–16.5/圆点 14 及 duo gap10 全部缩小覆盖；S6 六卡 3×2、S5 mini、S10–12 pill-row、S13 阶段卡同引 gap token；S2/S9 居中图卡 --w-center:604（=12 列栅格 6 列跨距，与 duo 单图同宽、全站同宽；报告建议 8–10 列=816+ 会使 S9 在 1920×1080 溢出一屏且与 S5 轮基准 620 冲突，按「以 S5 实测为准」取 6 列档）。侧栏图统一 var(--side-col):47% stretch/顶缘对齐不变。
+  (4) 卡片复核：.card 统一 --pad-card/圆角 24/图标 48（删 #s3 图标 44 与手机 40 覆盖，图标仅 48/44 两档，S8 手机 38→44）；six-card/stage-card/mini-card 为紧凑小卡档圆角 16；S6 卡题=--t-card-sm 20（不低于下限）；S5 mini-grid 间距 32/16 保持基准屏实测不变。
+  (5) 触控目标：桌面导航「预约诊断/登录」line-height:20+padding 12→高 44；手机 S4 阶段 pill padding 9px 12px→高约 36（3+2 换行结构与小圆点分隔不动）；汉堡面板链接/按钮、底部主按钮均已 ≥44 复核通过。
+  (6) 动效统一：reveal/reveal-photo 改 translateY(24px)+opacity、560ms var(--ease)；stagger 标准 100ms（DOM data-stagger 仅密集例外档 60–80：s3-grid/s8-cards 90→100，mini/six 80、chip 60 保留）；prefers-reduced-motion 补 .flow-arrow/.stage-arrow/.btn/.btn-login/.btn-ghost，漂浮/呼吸/位移全关只留显隐，smooth scroll 保留；进度条/导航高亮/键盘/F 全屏/snap/汉堡逻辑零改动。
+  (7) S1 版式零改动，其值登记为独立 token（--t-display、#s1 专属 padding/间距档），不被母版覆盖；S10–12 三屏同模复核（胶囊/标题/pill/结句/47% 图卡完全一致，pill 文字并入 --t-chip 档）；底部 CTA wrap 同 1240、标题 --t-cta clamp(48,4.2vw,56)（display 与 screen 之间档）、padding 120 独立档。
+⑮ 本轮（v2 顶部导航改造：「应用场景」下拉菜单，仅动导航；13 屏内容/文案/版式/动效/图片、品牌/登录/预约诊断、进度条/键盘/F 全屏全部零改动）：
+  (1) 桌面端：原 <a href="#s9">应用场景</a> 改为 .nav-item 内 <button id="dropBtn">（aria-haspopup/aria-expanded），文字右侧 12px 内联 SVG chevron（currentColor，展开/hover 旋转 180°/200ms）；父项点击=展开/收起（不再跳 #s9）。下拉面板 .drop-panel：rgba(255,255,255,.9)+blur(20px)、圆角 16、1px rgba(0,0,0,.06) 描边、投影沿用卡片语言 0 18px 50px rgba(20,20,40,.08)、padding 8px、宽 232px、左缘与文字对齐（brief 220–240 内取值）；三项 1.0 能成交→#s10、2.0 能管店→#s11、3.0 能决策→#s12（左对齐 15px #3a3a3f 行高 44、hover #f5f5f7 圆角 10、左侧 6px 渐变小圆点，文案仅此三项无新增）。交互：CSS :hover 即开 + ::after 16px hover 桥（文字移到面板不收起）、JS mouseleave 120ms 延迟关；点子项 closeDrop+blur 后由原生 href+scroll-behavior:smooth+scroll-margin-top:80px 平滑定位；点击外部/Esc 收起；键盘：按钮 Enter/Space 原生 click 开合、ArrowDown 开并聚焦首项、.drop-panel:focus-within 保持展开使 Tab 可入三子项。
+  (2) 高亮逻辑：IntersectionObserver 增加 subLinks 映射（data-nav-sub），s10/s11/s12 命中时高亮父项 dropBtn（.active 渐变文字仅作用于内部 span，chevron 保持 currentColor 不透明）+ 对应子项 .current（品牌蓝 #4f8cff+600），分支优先于 links 映射故「教学」（data-nav=s10 保留、href 不变）不会与父项同时高亮；其他屏映射不变（首页 s1/定价 s13/技能 s7）。
+  (3) 手机端汉堡面板：「应用场景」改 .m-drop 手风琴——button.m-link.m-drop-btn（沿用 m-link 行样式，选择器 a.m-link 放宽为 .m-link）+ 14px chevron，点击就地展开/收起（默认收起，max-height 过渡 300ms）；三子项 .m-sub 缩进 16px、15px/行高 44、#6e6e73；点子项收手风琴+closeMenu+原生平滑滚动（沿用现行为）；其余四链接与登录/预约诊断不变。
+  (4) 不引外部库；reduced-motion 下 .drop-panel/.m-drop-panel/.chev/.m-chev 关过渡只留显隐。
+⑯ 本轮（v2 信息架构改造：S10/S11/S12 抽离为「应用场景」子页面，单文件 hash 路由；撤销上轮⑮的下拉菜单与手机手风琴；全部屏文案/图片/配色/字号档/动效逐字保留，旧版文件不动）：
+  (1) 路由：<main> 内两顶层容器——#viewHome（s1–s9、s13、cta，s13/cta 在 DOM 中上移至 s9 后）与 #viewScenarios（.scen-bar 页头条 + s10–s12 + .scen-end 收尾条）；纯 DOM 显隐（display:none）+ hashchange 监听，file:// 双击可用，无 fetch/无外部库/无多文件。hash 形态：#/（主页顶）、#/s7|#/s13|#/cta（主页锚点）、#/scenarios（子页）、#/scenarios/s10|s11|s12（子页锚点），兼容旧 #sN 直链。切换视图前记录该视图 scrollY，返回无锚点时恢复；带锚点先切视图再双 rAF 后 scrollIntoView（同视图平滑/跨视图即时，scroll-margin-top:80px 保留）；前进/后退天然可用；子页 <title> 改「万店慧招 · 应用场景」。
+  (2) 导航：删除⑮全部下拉/手风琴 DOM+CSS+JS；「应用场景」恢复普通链接→#/scenarios；品牌与「首页」→#/、「定价」→#/s13、「技能」→#/s7、「教学」→#/scenarios/s10（1.0 落地流程屏）、「预约诊断」→#/cta；高亮：主页由 IntersectionObserver 驱动（s1→首页/s7→技能/s13→定价，其余清除），子页固定高亮「应用场景」渐变态；汉堡面板五链接同路由、点击即 closeMenu。
+  (3) 子页：.scen-bar 页头条为文档流首条（非 sticky，固定导航之下、高 64、半透明白底+细底边线与导航同语言，左浅灰 pill「← 返回首页」→#/、右「应用场景」17px #6e6e73，手机 padding 22、返回钮高 44；随滚动移出，不遮挡三屏内容）；s10/s11/s12 三屏内容/案例图/入场 reveal/S10 流程点亮/min-height:100svh+snap 节奏原样；.scen-end 白底细线收尾条（「返回首页」+「预约入企诊断」→主页 cta，复用既有文案与 data-goto 跨视图逻辑，零新增文案）。
+  (4) S13 三阶段卡 div→a（整卡可点→#/scenarios/s10|s11|s12），沿用卡片 hover 上移，右下新增渐变小箭头 .sc-go（18px、hover 右移 3px），卡片文字未改，卡间 .stage-link 装饰箭头保留。
+  (5) 全局适配：reveal/章节级/导航高亮三组 IO 只对活动视图生效（display:none 不触发、返回自动重播，进入子页 s10 正常入场）；键盘逐屏列表=主页 [s1…s9,s13,cta] / 子页 [s10,s11,s12]；进度条分母=活动视图 scrollHeight，切换后重算；F 全屏、reduced-motion、snap、平滑滚动两视图不变。
+QA risks: S7 芯片 4 列宽 pill 与两图外缘对齐、S3 四卡与两图外缘像素对齐 -> 桌面截图核验；S9 在 1920×1080 内容高约 1077≤1080 不溢出（604 图卡档）-> 实测；S3/S7 撤销缩小档后 1440×900 略超一屏（旧版 S9 同样超出，min-height+snap proximity 允许）-> 记录；手机 390/375 单列折叠、S3 四卡改单列、两图堆叠通栏、S4 阶段条 3+2 不变、无横向溢出 -> 截图核验；reduced-motion 无大幅运动；S1 与旧版文件零变化；本轮⑯：scen-bar 页头条不遮挡 s10 内容、#/scenarios/s11 直达定位准确、S13 卡改 a 后版式不变、两视图切换 scrollY 记录/恢复、375px 子页无横向溢出 -> 路由逻辑复核+截图。
+-->
+<style>
+:root{
+  --bg:#ffffff;
+  --bg-soft:#f5f5f7;
+  --card:#f6f6f8;
+  --ink:#14141a;
+  --ink-2:#6e6e73;
+  --ink-3:#9a9aa0;
+  --num:#c7c7cc;
+  --line:#d2d2d7;
+  --line-soft:#e8e8ea;
+  --blue:#4f8cff;
+  --grad:linear-gradient(90deg,#4f8cff 0%,#a855f7 55%,#ff6fa5 100%);
+  --shadow-card:0 10px 40px rgba(20,20,40,.05);
+  --shadow-photo:0 24px 70px rgba(20,20,60,.14);
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --nav-h:64px;
+  --r:24px;
+  /* ===== 母版 token（第七轮：全站统一，S5 实测为基准）===== */
+  --wrap:1240px;
+  --pad-x:72px;            /* 中屏 48 / 手机 --pad-x-m */
+  --pad-x-m:22px;
+  --pad-t:92px; --pad-b:88px;   /* 内容屏 S2–S13 统一档；#s1/#cta 独立档 */
+  --gap-grid:32px;         /* 桌面 12 列栅格列 gap（手机 18） */
+  --gap-row:26px;          /* 多行栅格行 gap 24–28 取中 */
+  --gap-split:64px;        /* 双栏图文槽（中屏 44 / 手机 34） */
+  --side-col:47%;          /* 侧栏图列宽，全站统一 */
+  --w-center:604px;        /* 居中 16:9 图卡 = 栅格 6 列跨距（与 duo 单图同宽） */
+  --sp-block:36px;         /* 区块→区块 */
+  --sp-title-sub:20px;     /* 标题→副句/短线 */
+  --pad-card:28px 24px;    /* 标准卡内边距 */
+  --pad-card-sm:22px 20px; /* 紧凑卡内边距 */
+  --r-card:24px; --r-card-sm:16px;
+  /* 文字 5 档（桌面）：display 仅 S1 hero；screen 内容屏大标题；section 次级强调；card 卡题（两固定值）；body 正文；small 弱化小字 */
+  --t-display:clamp(52px,7.6vw,124px);
+  --t-screen:clamp(38px,4.8vw,72px);
+  --t-section:clamp(20px,1.7vw,24px);
+  --t-card:24px; --t-card-sm:20px;
+  --t-body:clamp(18px,1.7vw,26px);
+  --t-small:clamp(14px,1.15vw,16px);
+  --t-chip:clamp(16px,1.25vw,17px);   /* 芯片/功能 pill 统一档 */
+  --t-cta:clamp(48px,4.2vw,56px);     /* 底部 CTA：display 与 screen 之间档 */
+  /* 动效统一参数 */
+  --reveal-dy:24px; --reveal-dur:.56s; --stagger:100ms;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,"SF Pro Display","SF Pro Text","PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+  background:var(--bg);color:var(--ink);overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit}
+::selection{background:rgba(79,140,255,.18)}
+
+/* ---------- 渐变文字 ---------- */
+.grad-text{
+  background:var(--grad);
+  background-clip:text;-webkit-background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+}
+
+/* ---------- 滚动进度条 ---------- */
+#progress{
+  position:fixed;top:0;left:0;height:3px;width:0;
+  background:var(--grad);z-index:1200;border-radius:0 2px 2px 0;
+}
+
+/* ---------- 顶部导航 ---------- */
+.site-header{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:1100;
+  background:rgba(255,255,255,.72);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.nav-inner{
+  max-width:1384px;margin:0 auto;height:100%;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+  padding:0 40px;
+}
+.brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;color:var(--ink);letter-spacing:.01em}
+.brand svg{width:22px;height:22px;flex:none}
+.nav-center{display:flex;align-items:center;gap:34px}
+.nav-link{font-size:15px;color:#3a3a3f;transition:color .25s;padding:6px 0}
+.nav-link:hover{color:var(--blue)}
+.nav-link.active{
+  background:var(--grad);background-clip:text;-webkit-background-clip:text;
+  color:transparent;-webkit-text-fill-color:transparent;
+}
+.nav-right{display:flex;align-items:center;gap:14px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:999px;border:none;cursor:pointer;font-weight:600;
+  transition:transform .25s var(--ease),background .25s,box-shadow .25s;
+}
+.btn-grad{background:var(--grad);color:#fff}
+.btn-grad:hover{transform:scale(1.02)}
+.nav-cta{font-size:15px;line-height:20px;padding:12px 22px} /* 触控高 44 */
+.btn-login{
+  background:#fff;border:1px solid var(--line);color:var(--ink);
+  font-size:15px;line-height:20px;padding:12px 22px;border-radius:999px;cursor:pointer;font-weight:500; /* 触控高 44 */
+  transition:background .25s;
+}
+.btn-login:hover{background:var(--bg-soft)}
+.burger{
+  display:none;width:42px;height:42px;background:none;border:none;cursor:pointer;
+  flex-direction:column;align-items:center;justify-content:center;gap:5px;
+}
+.burger span{display:block;width:20px;height:1.6px;background:var(--ink);border-radius:2px;transition:transform .3s var(--ease),opacity .3s}
+.menu-open .burger span:nth-child(1){transform:translateY(6.6px) rotate(45deg)}
+.menu-open .burger span:nth-child(2){opacity:0}
+.menu-open .burger span:nth-child(3){transform:translateY(-6.6px) rotate(-45deg)}
+.mobile-menu{
+  display:none;position:absolute;top:var(--nav-h);left:0;right:0;
+  background:rgba(255,255,255,.92);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  backdrop-filter:blur(20px) saturate(180%);
+  border-radius:0 0 20px 20px;border-bottom:1px solid rgba(0,0,0,.06);
+  flex-direction:column;padding:10px 24px 26px;
+}
+.menu-open .mobile-menu{display:flex}
+.mobile-menu .m-link{font-size:17px;color:#3a3a3f;padding:14px 2px;border-bottom:1px solid rgba(0,0,0,.05)}
+.mobile-menu .m-btns{display:flex;gap:12px;margin-top:20px}
+.mobile-menu .m-btns .btn,.mobile-menu .m-btns .btn-login{flex:1;font-size:15px;padding:12px 18px}
+/* ---------- 本轮⑯：应用场景子页面（hash 路由视图 + 页头条 + 收尾条） ---------- */
+#viewScenarios{display:none} /* JS 路由切换 display */
+.scen-bar{
+  margin-top:var(--nav-h);height:64px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:0 var(--pad-x);
+  background:rgba(255,255,255,.72);
+  border-bottom:1px solid rgba(0,0,0,.06);
+}
+.back-btn{
+  display:inline-flex;align-items:center;gap:8px;flex:none;
+  height:40px;padding:0 18px;border-radius:999px;
+  border:1px solid var(--line);background:#fff;color:var(--ink-2);
+  font-size:14px;font-weight:500;cursor:pointer;
+  transition:background .25s,color .25s;
+}
+.back-btn:hover{background:var(--bg-soft);color:var(--ink)}
+.back-btn svg{width:15px;height:15px;flex:none}
+.scen-bar-title{font-size:17px;font-weight:600;color:#6e6e73;letter-spacing:.02em}
+.scen-end{
+  display:flex;align-items:center;justify-content:center;gap:20px;
+  padding:32px var(--pad-x);border-top:1px solid var(--line-soft);background:#fff;
+}
+.se-link,.se-btn{
+  background:none;border:none;cursor:pointer;font-family:inherit;
+  font-size:15px;color:var(--ink-2);padding:12px 6px;transition:color .25s;
+}
+.se-link:hover,.se-btn:hover{color:var(--blue)}
+.se-btn{font-weight:600;color:var(--ink)}
+.se-div{width:1px;height:18px;background:var(--line-soft);flex:none}
+
+/* ---------- 章节骨架 ---------- */
+.page{
+  position:relative;min-height:100vh;min-height:100svh;
+  display:flex;align-items:center;
+  padding:var(--pad-t) var(--pad-x) var(--pad-b); /* 内容屏 S2–S13 统一档 */
+  scroll-margin-top:80px;
+  overflow:hidden;
+}
+#s1{padding:130px var(--pad-x) 110px} /* hero 独立档 */
+#cta{padding:120px var(--pad-x)}      /* 底部 CTA 独立档 */
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;position:relative;z-index:2}
+.soft{background-color:var(--bg-soft)}
+.sec-num{
+  position:absolute;right:44px;bottom:30px;z-index:2;
+  font-size:20px;font-weight:600;color:var(--num);letter-spacing:.06em;
+  font-variant-numeric:tabular-nums;
+}
+@media (min-width:901px){
+  html{scroll-snap-type:y proximity}
+  .page{scroll-snap-align:start}
+}
+
+/* 光晕轮换 */
+#s1{background-image:radial-gradient(1100px 720px at 88% 8%,rgba(89,139,255,.07),transparent 65%)}
+#s2{background-image:radial-gradient(1000px 700px at 8% 22%,rgba(168,99,255,.06),transparent 65%)}
+#s3{background-image:radial-gradient(1000px 700px at 90% 85%,rgba(255,111,170,.05),transparent 65%)}
+#s4{background-image:radial-gradient(1000px 700px at 6% 88%,rgba(89,139,255,.07),transparent 65%)}
+#s5{background-image:radial-gradient(1000px 700px at 92% 14%,rgba(168,99,255,.06),transparent 65%)}
+#s6{background-image:radial-gradient(1000px 700px at 4% 10%,rgba(255,111,170,.05),transparent 65%)}
+#s7{background-image:radial-gradient(1000px 700px at 92% 88%,rgba(89,139,255,.07),transparent 65%)}
+#s8{background-image:radial-gradient(1000px 700px at 6% 84%,rgba(168,99,255,.06),transparent 65%)}
+#s9{background-image:radial-gradient(1000px 700px at 8% 8%,rgba(255,111,170,.05),transparent 65%)}
+#s10{background-image:radial-gradient(1000px 700px at 92% 90%,rgba(89,139,255,.07),transparent 65%)}
+#s11{background-image:radial-gradient(1000px 700px at 6% 10%,rgba(168,99,255,.06),transparent 65%)}
+#s12{background-image:radial-gradient(1000px 700px at 90% 12%,rgba(255,111,170,.05),transparent 65%)}
+#s13{background-image:radial-gradient(1000px 700px at 10% 88%,rgba(89,139,255,.07),transparent 65%)}
+#cta{background-image:radial-gradient(1100px 700px at 50% 10%,rgba(168,99,255,.06),transparent 65%),radial-gradient(900px 600px at 85% 90%,rgba(255,111,170,.05),transparent 65%)}
+
+/* ---------- 入场动效 ---------- */
+.reveal{
+  opacity:0;transform:translateY(var(--reveal-dy));
+  transition:opacity var(--reveal-dur) var(--ease),transform var(--reveal-dur) var(--ease);
+  transition-delay:var(--d,0ms);
+}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal-photo{
+  opacity:0;transform:translateY(var(--reveal-dy)) scale(1.03);
+  transition:opacity var(--reveal-dur) var(--ease),transform var(--reveal-dur) var(--ease);
+  transition-delay:var(--d,0ms);
+}
+.reveal-photo.in{opacity:1;transform:translateY(0) scale(1)}
+
+/* ---------- 排版组件 ---------- */
+.eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:var(--sp-title-sub)}
+.eyebrow .e-line{width:36px;height:3px;border-radius:2px;background:var(--grad);flex:none}
+.eyebrow .e-text{font-size:var(--t-small);color:var(--ink-3);letter-spacing:.08em}
+.ver-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--grad);color:#fff;font-size:15px;font-weight:700;
+  border-radius:999px;padding:7px 18px;letter-spacing:.04em;margin-bottom:24px;
+}
+.sec-title{
+  font-size:var(--t-screen);font-weight:900;letter-spacing:-.02em; /* 内容屏大标题统一档（S2–S13） */
+  line-height:1.1;color:var(--ink);
+}
+.sec-title .t-line{display:block}
+.sec-sub{
+  margin-top:var(--sp-title-sub);font-size:var(--t-body);line-height:1.55;
+  color:var(--ink-2);font-weight:400;
+}
+.sec-sub .em{font-weight:700}
+.tail{margin-top:22px;font-size:var(--t-body);line-height:1.7;color:var(--ink-2)}
+.tail .grad-line{font-size:inherit;font-weight:700}
+.tail-oneline{display:flex;align-items:center;gap:28px;white-space:nowrap}
+.tail-oneline .grad-line{font-size:inherit}
+.rule{width:36px;height:3px;border-radius:2px;background:var(--grad);margin:0 auto 26px}
+
+/* ---------- 按钮 ---------- */
+.btn-hero{font-size:17px;padding:16px 36px}
+.btn-ghost{
+  background:#fff;border:1px solid var(--line);color:var(--ink);
+  font-size:17px;padding:16px 36px;border-radius:999px;cursor:pointer;font-weight:500;
+  transition:background .25s,transform .25s var(--ease);
+}
+.btn-ghost:hover{background:var(--bg-soft);transform:translateY(-2px)}
+.cta-row{display:flex;gap:16px;margin-top:40px;flex-wrap:wrap}
+.btn-final{
+  position:relative;overflow:hidden;font-size:18px;padding:18px 44px;margin-top:44px;
+}
+.btn-final::after{
+  content:"";position:absolute;top:0;left:-90%;width:55%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.55),transparent);
+  transform:skewX(-20deg);transition:left .6s var(--ease);
+}
+.btn-final:hover::after{left:140%}
+
+/* ---------- 案例照片 ---------- */
+.photo-wrap{position:relative}
+.photo-card{
+  position:relative;border-radius:var(--r);overflow:hidden;
+  box-shadow:var(--shadow-photo);background:#0c1220;
+}
+.case-photo{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .5s var(--ease);
+}
+.photo-card:hover .case-photo{transform:scale(1.03)}
+.photo-tag{
+  position:absolute;top:18px;left:18px;z-index:3;
+  background:rgba(255,255,255,.72);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-radius:999px;font-size:13px;color:var(--ink);
+  padding:6px 14px;font-weight:500;
+}
+.pc-43 .photo-card{aspect-ratio:4/3}
+.pc-169 .photo-card{aspect-ratio:16/9}
+
+/* ---------- v2：两张并列图卡（S3/S7）——与上方卡片/芯片网格同容器同 gap（12 列栅格中各占 6 列），图左缘=首卡左缘、右缘=末卡右缘 ---------- */
+.duo-banner{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-grid);margin-top:var(--sp-block);width:100%}
+.duo-banner .photo-wrap{min-width:0}
+.duo-banner .photo-card{aspect-ratio:16/9}
+.photo-caption{
+  position:absolute;left:18px;bottom:18px;z-index:3;
+  background:rgba(255,255,255,.72);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border-radius:999px;font-size:13px;color:var(--ink);
+  padding:6px 14px;font-weight:500;
+}
+
+/* 双栏图文 */
+.grid-2{display:grid;align-items:center;gap:var(--gap-split)}
+.grid-2.top{align-items:start}
+.grid-2.stretch{align-items:stretch}
+.grid-2.stretch > .g-photo{display:flex;flex-direction:column}
+.grid-2.stretch .photo-wrap{flex:1;min-height:0}
+.grid-2.stretch .photo-card{height:100%;aspect-ratio:auto}
+.grid-2 > .g-text{min-width:0}
+.grid-2 > .g-photo{min-width:0}
+/* 侧栏图统一列宽（类名为历史遗留，值走 --side-col:47%） */
+.g-1-46{grid-template-columns:minmax(0,1fr) var(--side-col)}
+.g-1-45,.g-52-48,.g-56-44,.g-58-42,.g-55-45{grid-template-columns:minmax(0,1fr) var(--side-col)}
+
+/* ---------- S1（v2：无图、全内容居中；本轮：主标题放大 + 眉标左右渐变线 + 组间距拉开） ---------- */
+.s1-center{display:flex;flex-direction:column;align-items:center;text-align:center}
+.s1-title{font-size:var(--t-display);font-weight:900;letter-spacing:-.02em;line-height:1.06} /* hero 独立档，不入内容屏阶梯 */
+.s1-sub{margin-top:50px;font-size:clamp(19px,2vw,28px);line-height:1.65;color:var(--ink-2)} /* 标题→副句 34→50（本轮） */
+#s1 .eyebrow{justify-content:center;align-items:center;gap:22px;margin-bottom:54px} /* 眉标→标题 36→54（本轮） */
+#s1 .eyebrow .e-line{width:64px;height:2px;border-radius:2px;flex:none}
+#s1 .eyebrow .e-line-l{background:linear-gradient(90deg,rgba(79,140,255,0) 0%,#4f8cff 45%,#a855f7 78%,#ff6fa5 100%)}
+#s1 .eyebrow .e-line-r{background:linear-gradient(90deg,#4f8cff 0%,#a855f7 22%,#ff6fa5 55%,rgba(255,111,170,0) 100%)}
+#s1 .cta-row{justify-content:center;width:100%;margin-top:106px;gap:22px} /* 副句→CTA 72→106、按钮 gap 16→22（本轮，仅 S1） */
+
+/* ---------- S2 ---------- */
+.center-col{display:flex;flex-direction:column;align-items:center;text-align:center}
+.s2-title{font-size:var(--t-screen);font-weight:900;letter-spacing:-.02em;line-height:1.1} /* 归一 --t-screen */
+.s2-lines{margin-top:var(--sp-title-sub);font-size:var(--t-body);line-height:1.55;color:var(--ink-2)}
+.s2-banner{width:100%;max-width:var(--w-center);margin-top:48px} /* 居中图卡=栅格 6 列跨距，与 S9 同宽 */
+
+/* ---------- 卡片 ---------- */
+.card{
+  background:var(--card);border-radius:var(--r-card);box-shadow:var(--shadow-card);
+  padding:var(--pad-card);transition:transform .25s var(--ease),box-shadow .25s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(20,20,40,.08)}
+.soft .card{background:#fff}
+.card .c-icon{width:48px;height:48px;margin-bottom:16px} /* 图标仅 48/44 两档 */
+.card .c-title{font-size:var(--t-card);font-weight:700;letter-spacing:-.01em;line-height:1.3}
+
+/* S3 四卡：4×3 列，gap=--gap-grid，与下方 duo-banner 共享栅格边线（标题/卡题/图标走母版档，无屏级缩小） */
+.s3-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap-grid);margin-top:var(--sp-block)}
+/* v2：S3 居中排版（标题/眉标居中，四卡网格全宽天然与 duo-banner 对齐） */
+#s3 .eyebrow{justify-content:center}
+#s3 .sec-title{text-align:center}
+
+/* ---------- S4 ---------- */
+.stage-bar{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  background:rgba(10,16,32,.42);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+  gap:8px;padding:16px 18px;
+}
+.stage-pill{
+  font-size:14px;color:rgba(255,255,255,.88);
+  border:1px solid rgba(255,255,255,.45);border-radius:999px;
+  padding:5px 14px;background:transparent;
+  transition:background .5s var(--ease),border-color .5s,color .5s,transform .5s var(--ease);
+  transform:translateY(6px);opacity:.65;
+}
+.stage-arrow{color:rgba(255,255,255,.7);font-size:13px;display:flex;align-items:center;opacity:.5;transition:opacity .5s}
+.stage-arrow svg{width:14px;height:14px}
+#s4.in .stage-pill{
+  background:var(--grad);border-color:transparent;color:#fff;font-weight:600;
+  transform:translateY(0);opacity:1;
+}
+#s4.in .stage-arrow{opacity:1}
+#s4.in .st:nth-of-type(1) .stage-pill{transition-delay:0ms}
+#s4.in .st:nth-of-type(2) .stage-pill{transition-delay:120ms}
+#s4.in .st:nth-of-type(3) .stage-pill{transition-delay:240ms}
+#s4.in .st:nth-of-type(4) .stage-pill{transition-delay:360ms}
+#s4.in .st:nth-of-type(5) .stage-pill{transition-delay:480ms}
+
+/* ---------- S5（用户确认基准屏：mini-grid 间距保持实测 32/16） ---------- */
+.mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px}
+.mini-card{
+  background:var(--card);border-radius:16px;box-shadow:var(--shadow-card);
+  padding:15px 18px;display:flex;align-items:center;gap:12px;
+  transition:transform .25s var(--ease);
+}
+.mini-card:hover{transform:translateY(-4px)}
+.mini-card svg{width:22px;height:22px;flex:none}
+.mini-card .m-text{font-size:16px;font-weight:600;color:var(--ink)}
+.s5-trace{margin-top:22px;font-size:var(--t-section);font-weight:700;line-height:1.45} /* --t-section 按此句实测定档 */
+.pulse-dot{position:absolute;top:50%;left:50%;z-index:3;width:22px;height:22px;border-radius:50%;background:var(--grad);transform:translate(-50%,-50%);box-shadow:0 0 24px rgba(120,180,255,.9)}
+.pulse-ring{
+  position:absolute;top:50%;left:50%;z-index:2;border-radius:50%;
+  border:2px solid rgba(120,180,255,.55);
+  transform:translate(-50%,-50%) scale(.4);opacity:0;
+  animation:breathe 3s ease-out infinite;
+}
+.pr1{width:80px;height:80px}
+.pr2{width:140px;height:140px;animation-delay:1.5s}
+@keyframes breathe{
+  0%{transform:translate(-50%,-50%) scale(.4);opacity:.9}
+  100%{transform:translate(-50%,-50%) scale(1.5);opacity:0}
+}
+
+/* ---------- S6（六卡 3×2 紧凑档：卡题=--t-card-sm 下限，与右图 stretch 等高） ---------- */
+.six-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-grid) var(--gap-row);margin-top:var(--sp-block)}
+.six-card{
+  background:var(--card);border-radius:var(--r-card-sm);box-shadow:var(--shadow-card);
+  padding:var(--pad-card-sm);transition:transform .25s var(--ease);
+}
+.six-card:hover{transform:translateY(-4px)}
+.six-num{font-size:19px;font-weight:800;letter-spacing:.02em;margin-bottom:8px}
+.six-title{font-size:var(--t-card-sm);font-weight:700;line-height:1.35;color:var(--ink)}
+.six-line{width:32px;height:3px;border-radius:2px;background:var(--grad);margin-top:14px}
+.s6-foot{
+  margin-top:var(--gap-row);font-size:var(--t-body);line-height:1.7;color:var(--ink-2);
+  display:flex;align-items:center;gap:16px;white-space:nowrap;
+}
+.foot-dot{width:8px;height:8px;border-radius:50%;background:var(--grad);flex:none}
+
+/* ---------- S7（11 芯片 4+4+3 并入统一栅格：列宽/gap 与下方两图对齐，文字 --t-chip 统一档，无屏级缩小） ---------- */
+.chip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px var(--gap-grid);margin-top:var(--sp-block)} /* 密集例外档：行 gap 20 */
+.chip{
+  display:flex;align-items:center;gap:10px;justify-content:center;
+  background:#fff;border:1px solid var(--line-soft);border-radius:999px;
+  padding:11px 18px;font-size:var(--t-chip);font-weight:600;color:var(--ink);
+  transition:transform .25s var(--ease),border-color .25s,background .25s,box-shadow .25s;
+}
+.soft .chip{background:#fff}
+.chip::before{
+  content:"";width:16px;height:16px;border-radius:50%;background:var(--grad);flex:none;opacity:.9;
+}
+.chip:hover{
+  transform:translateY(-4px);border-color:transparent;
+  background:linear-gradient(#fff,#fff) padding-box,var(--grad) border-box;
+  border:1px solid transparent;box-shadow:var(--shadow-card);
+}
+
+/* ---------- S8 ---------- */
+.s8-cards{display:flex;flex-direction:column;gap:14px;margin-top:var(--sp-block)}
+.s8-cards .card{display:flex;align-items:center;gap:20px;padding:var(--pad-card-sm)}
+.s8-cards .c-icon{width:48px;height:48px;margin-bottom:0;flex:none}
+.s8-cards .c-title{font-size:var(--t-card)}
+
+/* ---------- S9（标题归一 --t-screen，节点文字 --t-small，结句 --t-body，图卡并入栅格宽度） ---------- */
+.timeline{display:flex;align-items:flex-start;margin:var(--sp-block) 0 28px}
+.t-node{flex:1;position:relative;display:flex;flex-direction:column;align-items:center}
+.t-node::before{
+  content:"";position:absolute;top:10px;left:-50%;width:100%;height:2px;
+  background:var(--line-soft);transition:background .5s var(--ease);
+}
+.t-node:first-child::before{display:none}
+.t-dot{
+  width:22px;height:22px;border-radius:50%;background:#fff;
+  border:2px solid transparent;position:relative;z-index:1;
+  background-image:linear-gradient(#fff,#fff),var(--grad);
+  background-origin:border-box;background-clip:padding-box,border-box;
+  transition:background-image .5s var(--ease),transform .5s var(--ease);
+}
+.t-label{margin-top:16px;font-size:var(--t-small);font-weight:600;color:var(--ink-2);transition:color .5s}
+#s9.in .t-node .t-dot{
+  background-image:var(--grad),var(--grad);
+  background-clip:padding-box,border-box;
+  transform:scale(1.12);
+}
+#s9.in .t-node .t-label{color:var(--ink)}
+#s9.in .t-node::before{background:var(--grad)}
+#s9.in .t-node:nth-child(1) .t-dot{transition-delay:0ms}
+#s9.in .t-node:nth-child(2) .t-dot,#s9.in .t-node:nth-child(2)::before{transition-delay:150ms}
+#s9.in .t-node:nth-child(3) .t-dot,#s9.in .t-node:nth-child(3)::before{transition-delay:300ms}
+#s9.in .t-node:nth-child(4) .t-dot,#s9.in .t-node:nth-child(4)::before{transition-delay:450ms}
+#s9.in .t-node:nth-child(5) .t-dot,#s9.in .t-node:nth-child(5)::before{transition-delay:600ms}
+.s9-lines{font-size:var(--t-body);line-height:1.7;color:var(--ink-2);margin-top:8px}
+.s9-banner{margin-top:var(--sp-block);width:100%;max-width:var(--w-center);margin-left:auto;margin-right:auto}
+.s9-end{margin-top:30px;font-size:var(--t-body);line-height:1.7;color:var(--ink-2)}
+
+/* ---------- S10–S12 ---------- */
+.pill-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:var(--sp-block)}
+.f-pill{
+  background:var(--card);border-radius:999px;padding:11px 22px;
+  font-size:var(--t-chip);font-weight:500;color:var(--ink); /* 与芯片同文字档 */
+  transition:transform .25s var(--ease);
+}
+.soft .f-pill{background:#fff}
+.f-pill:hover{transform:translateY(-3px)}
+.flow-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:16px}
+.flow-lead{font-size:clamp(16px,1.3vw,20px);color:var(--ink-2);margin-right:4px}
+.flow-pill{
+  border:1.5px solid transparent;border-radius:999px;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box;
+  padding:9px 20px;font-size:clamp(14px,1.15vw,17px);font-weight:600;color:var(--ink);
+  opacity:.35;transform:translateY(8px);
+  transition:opacity .5s var(--ease),transform .5s var(--ease);
+}
+.soft .flow-pill{background:linear-gradient(var(--bg-soft),var(--bg-soft)) padding-box,var(--grad) border-box}
+.flow-arrow{color:var(--ink-3);display:flex;align-items:center;opacity:.35;transition:opacity .5s}
+.flow-arrow svg{width:16px;height:16px}
+.page.in .flow-pill{opacity:1;transform:translateY(0)}
+.page.in .flow-arrow{opacity:1}
+.page.in .flow-row > *:nth-child(1){transition-delay:0ms}
+.page.in .flow-row > *:nth-child(2){transition-delay:120ms}
+.page.in .flow-row > *:nth-child(3){transition-delay:240ms}
+.page.in .flow-row > *:nth-child(4){transition-delay:360ms}
+.page.in .flow-row > *:nth-child(5){transition-delay:480ms}
+.page.in .flow-row > *:nth-child(6){transition-delay:600ms}
+.page.in .flow-row > *:nth-child(7){transition-delay:720ms}
+
+/* ---------- S13 ---------- */
+.s13-title .t-line{
+  opacity:.25;transition:opacity .6s var(--ease);
+}
+#s13.in .s13-title .t-line{opacity:1}
+#s13.in .s13-title .t-line:nth-child(1){transition-delay:0ms}
+#s13.in .s13-title .t-line:nth-child(2){transition-delay:200ms}
+#s13.in .s13-title .t-line:nth-child(3){transition-delay:400ms}
+.stage-cards{display:flex;align-items:stretch;gap:14px;margin-top:var(--sp-block);flex-wrap:wrap}
+.stage-card{
+  flex:1;min-width:140px;background:#fff;border-radius:var(--r-card-sm);box-shadow:var(--shadow-card);
+  padding:var(--pad-card-sm);transition:transform .25s var(--ease);
+}
+.stage-card:hover{transform:translateY(-4px)}
+.stage-card .sc-ver{font-size:19px;font-weight:800;margin-bottom:6px}
+.stage-card .sc-name{font-size:var(--t-card-sm);font-weight:700;color:var(--ink)}
+.stage-link{display:flex;align-items:center;color:transparent;flex:none}
+.stage-link svg{width:22px;height:22px}
+/* 本轮⑯：阶段卡整卡可点 → 子页面对应版本屏（文字未改，hover 沿用卡片上移，右下渐变小箭头暗示链接） */
+a.stage-card{display:block;position:relative}
+.sc-go{
+  position:absolute;right:14px;bottom:12px;width:18px;height:18px;
+  display:flex;align-items:center;opacity:.5;
+  transition:opacity .25s,transform .25s var(--ease);
+}
+.sc-go svg{width:18px;height:18px}
+.stage-card:hover .sc-go{opacity:1;transform:translateX(3px)}
+
+/* ---------- 底部 CTA ---------- */
+#cta{min-height:80vh;min-height:80svh;text-align:center}
+#cta .cta-title{font-size:var(--t-cta);font-weight:900;letter-spacing:-.02em;line-height:1.1}
+#cta .cta-sub{margin-top:var(--sp-title-sub);font-size:var(--t-body);color:var(--ink-2)}
+#cta .copy{margin-top:56px;font-size:13px;color:var(--ink-3)}
+
+/* ---------- 桌面（≥769）：S2–S13 统一 S5 基准（wrap 1240 / 标题 72 / 右图 47% / padding 92-88） ---------- */
+@media (min-width:769px){
+  #s4 .grid-2{align-items:center}
+  #s4 .stage-bar{padding:18px 20px;gap:10px}
+  #s4 .stage-pill{font-size:15px;padding:7px 18px}
+  #s5 .grid-2{grid-template-columns:minmax(0,1fr) var(--side-col)}
+  #s6 .g-photo,#s8 .g-photo{display:flex;flex-direction:column}
+  #s10 .g-text,#s11 .g-text,#s12 .g-text{display:flex;flex-direction:column}
+  #s10 .g-text .tail,#s11 .g-text .tail,#s12 .g-text .tail{margin-top:auto;padding-top:28px}
+}
+
+/* ---------- 响应式：769–1199 ---------- */
+@media (max-width:1199px){
+  .page{padding:var(--pad-t) 48px var(--pad-b)}
+  #s1{padding:130px 48px 110px}
+  #cta{padding:120px 48px}
+  .scen-bar{padding:0 48px}
+  .grid-2{gap:44px}
+  .six-grid{grid-template-columns:repeat(2,1fr)}
+  .s3-grid{grid-template-columns:repeat(2,1fr)}
+  .chip-grid{grid-template-columns:repeat(3,1fr)} /* 中屏 3 列，左右缘仍与两图对齐 */
+  .grid-2.stretch{align-items:start}
+  .grid-2.stretch .photo-card{height:auto;aspect-ratio:16/9}
+  .sec-title,.s2-title{font-size:clamp(36px,5.4vw,60px)} /* 中屏统一档，无屏级覆盖 */
+  .s1-title{font-size:clamp(48px,8vw,92px)}
+}
+
+/* ---------- S1 矮视口档（≥901 宽且视口高 ≤820，如 1366×768）：收紧上下留白与组间距，保证首屏不溢出、不贴导航/贴底 ---------- */
+@media (min-width:901px) and (max-height:820px){
+  #s1{padding-top:100px;padding-bottom:80px}
+  #s1 .eyebrow{margin-bottom:40px}
+  #s1 .s1-sub{margin-top:36px}
+  #s1 .cta-row{margin-top:76px}
+}
+
+/* ---------- 响应式：≤768（统一折叠：单列、wrap 22、网格 gap 18、手机文字档位全走 token，无屏级覆盖） ---------- */
+@media (max-width:768px){
+  :root{--r:20px;--gap-grid:18px}
+  .nav-inner{padding:0 20px}
+  .nav-center,.nav-right{display:none}
+  .burger{display:flex}
+  .page{padding:76px var(--pad-x-m);min-height:100svh}
+  #s1{padding:88px var(--pad-x-m)}
+  #cta{padding:96px var(--pad-x-m)}
+  .sec-num{display:none}
+  .grid-2{grid-template-columns:1fr;gap:34px}
+  .grid-2 > .g-photo{order:2}
+  .grid-2 > .g-text{order:1}
+  .pc-43 .photo-card,.pc-169 .photo-card,.pc-45 .photo-card{aspect-ratio:16/9;height:auto;max-height:none}
+  .grid-2.stretch .photo-card{height:auto}
+  .photo-card{border-radius:18px}
+  .photo-tag{top:14px;left:14px}
+  .photo-caption{left:14px;bottom:14px}
+  .s2-banner{margin-top:40px}
+  .s9-banner{margin-top:32px}
+  /* duo-banner 手机端上下堆叠通栏 16:9，与单列卡片同宽同 gap */
+  .duo-banner{grid-template-columns:1fr;gap:var(--gap-grid)}
+  /* 多列卡片区统一单列；芯片/pill 可 2 列（左缘对齐标题） */
+  .s3-grid{grid-template-columns:1fr;gap:var(--gap-grid);margin-top:32px}
+  .six-grid{grid-template-columns:1fr;gap:var(--gap-grid);margin-top:32px}
+  .chip-grid{grid-template-columns:repeat(2,1fr);gap:var(--gap-grid);margin-top:32px}
+  .chip{padding:13px 16px;justify-content:flex-start;font-size:clamp(15px,4vw,16px)}
+  .mini-grid{grid-template-columns:1fr;gap:var(--gap-grid);margin-top:24px}
+  .mini-card .m-text{font-size:15px}
+  .s5-trace{margin-top:20px;font-size:17px;text-align:center}
+  .card{border-radius:20px;padding:24px 20px}
+  .card .c-icon{width:44px;height:44px;margin-bottom:16px}
+  .card .c-title{font-size:clamp(17px,4.6vw,18px)}
+  .s8-cards{margin-top:30px;gap:14px}
+  .s8-cards .c-icon{width:44px;height:44px} /* 图标仅 48/44 两档 */
+  .s8-cards .card{padding:20px 18px;gap:16px}
+  .pill-row{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--gap-grid);margin-top:22px}
+  .f-pill{padding:9px 12px;font-size:clamp(14px,3.7vw,15px);text-align:center}
+  .pill-row .f-pill:last-child:nth-child(odd){grid-column:span 2}
+  .flow-row{margin-top:14px}
+  .flow-pill{padding:8px 16px;font-size:clamp(14px,3.7vw,15px)}
+  .ver-badge{font-size:14px;padding:6px 16px;margin-bottom:18px}
+  .eyebrow{margin-bottom:18px}
+  .s6-foot{gap:12px}
+  .foot-dot{width:7px;height:7px}
+  .tail-oneline{gap:18px;font-size:15px}
+  .tail-oneline .grad-line{font-size:15px}
+  .stage-cards{margin-top:30px}
+  .six-title{font-size:16px} /* 紧凑卡题手机档 */
+  .stage-card .sc-ver{font-size:17px}
+  .stage-card .sc-name{font-size:16px}
+  /* 手机字号档位（统一 token，不回调变大） */
+  .s1-sub,.sec-sub{font-size:clamp(17px,4.6vw,19px);line-height:1.55;margin-top:20px}
+  .tail,.s6-foot,.s9-lines,.s9-end,.s2-lines{font-size:16px}
+  .tail .grad-line{font-size:17px}
+  .tail{margin-top:22px}
+  .s6-foot{margin-top:24px}
+  .s9-end{margin-top:28px}
+  .sec-title,.s2-title{font-size:clamp(30px,8vw,34px);line-height:1.14} /* 屏标题统一档，无屏级覆盖 */
+  #s7 .sec-title{font-size:clamp(24px,6.6vw,28px)} /* S7 标题手机端缩小一档，保证「各司其职。也一起工作。」单行不换行 */
+  .s1-title{font-size:clamp(44px,13.2vw,54px);line-height:1.06} /* hero 独立档 */
+  /* S1 手机端：眉标左右渐变线缩短、组间距再加大（增幅小于桌面，375×667 实测不溢出） */
+  #s1 .eyebrow{gap:14px;margin-bottom:34px}
+  #s1 .eyebrow .e-line{width:36px;height:2px}
+  #s1 .s1-sub{margin-top:36px}
+  #cta .cta-title{font-size:clamp(30px,8vw,34px);line-height:1.14}
+  #cta .cta-sub{font-size:17px}
+  #cta .copy{margin-top:44px}
+  .btn-final{font-size:17px;padding:16px 38px;margin-top:34px}
+  .cta-row{gap:12px;margin-top:30px}
+  .btn-hero,.btn-ghost{flex:none;padding:12px 22px;font-size:15px} /* S1 双按钮手机端缩小：不再 flex:1 拉满整行，按内容宽度居中 */
+  #s1 .cta-row{margin-top:68px;gap:14px}
+  .brand{font-size:17px}
+  .mobile-menu .m-link{font-size:16px}
+  /* 时间轴纵向，节点文字 t-small 手机档 */
+  .timeline{flex-direction:column;align-items:center;gap:0;margin:40px 0 32px;padding-left:0}
+  .t-node{flex-direction:row;align-items:center;gap:18px;padding:14px 0}
+  .t-node::before{top:-50%;left:10px;width:2px;height:100%;}
+  .t-node:first-child::before{display:none}
+  .t-label{margin-top:0;font-size:14px}
+  .t-dot{flex:none}
+  /* S13 阶段卡纵排 */
+  .stage-cards{flex-direction:column;gap:10px}
+  .stage-link{justify-content:center;transform:rotate(90deg);height:26px}
+  /* S4 五阶段色块条（仅手机端）：缩小 pill、箭头换小圆点、强制 3+2 居中换行；桌面端不受影响 */
+  .stage-bar{position:static;height:auto;padding:12px 14px;border-radius:0 0 18px 18px;background:rgba(10,16,32,.55);flex-wrap:wrap;justify-content:center;column-gap:9px;row-gap:6px}
+  .stage-bar .st{display:inline-flex;align-items:center}
+  .stage-pill{font-size:12.5px;line-height:16px;padding:9px 12px} /* 触控高 36px，3+2 换行不变 */
+  .stage-arrow{display:none}
+  /* 第 3 个箭头（第 6 个 span）复用为换行符，强制 3+2；换行行高 0，视觉行距 6px×2=12px */
+  .stage-bar > .stage-arrow:nth-of-type(6){display:block;flex-basis:100%;height:0}
+  /* 色块间小圆点分隔：挂在 签约/回款/存活 前（行首的 开业 前不加，避免行首悬空点） */
+  .stage-bar > span:nth-of-type(3)::before,
+  .stage-bar > span:nth-of-type(5)::before,
+  .stage-bar > span:nth-of-type(9)::before{content:"";width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.55);flex:none;margin-right:6px}
+  .s4-photo{border-radius:18px;overflow:hidden;box-shadow:var(--shadow-photo)}
+  .s4-photo .photo-card{box-shadow:none;border-radius:18px 18px 0 0}
+  /* 本轮⑯：子页页头条/收尾条手机档（返回钮触控高 44） */
+  .scen-bar{padding:0 var(--pad-x-m)}
+  .back-btn{height:44px;padding:0 16px}
+  .scen-bar-title{font-size:16px}
+  .scen-end{padding:24px var(--pad-x-m);gap:12px}
+  .se-link,.se-btn{padding:14px 6px} /* 触控高约 44 */
+}
+
+/* ---------- 减弱动效（只留显隐，关漂浮/呼吸/位移/错峰） ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal,.reveal-photo{opacity:1 !important;transform:none !important;transition:none !important}
+  .pulse-ring{animation:none !important}
+  .stage-pill,.flow-pill,.t-dot,.t-label,.t-node::before,.s13-title .t-line{transition:none !important;opacity:1 !important;transform:none !important}
+  .flow-arrow,.stage-arrow{transition:none !important;opacity:1 !important}
+  .card,.six-card,.stage-card,.mini-card,.chip,.f-pill,.btn,.btn-ghost,.btn-login,.back-btn,.sc-go{transition:none !important}
+  .card:hover,.six-card:hover,.stage-card:hover,.mini-card:hover,.chip:hover,.f-pill:hover,.btn-grad:hover,.btn-ghost:hover{transform:none !important}
+  .btn-final::after{display:none}
+  .case-photo{transition:none}
+  *{scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+
+<!-- 全局渐变定义（图标描边引用） -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" data-lvt-eid="45ad6fc1c4"><defs data-lvt-eid="99d37393ff">
+  <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1" data-lvt-eid="11a87f963f">
+    <stop offset="0" stop-color="#4f8cff" data-lvt-eid="bd8a9629ff"></stop><stop offset=".55" stop-color="#a855f7" data-lvt-eid="14a186a223"></stop><stop offset="1" stop-color="#ff6fa5" data-lvt-eid="6ada5c9c58"></stop>
+  </linearGradient>
+</defs></svg>
+
+<div id="progress" data-lvt-eid="281f73604c"></div>
+
+<!-- ================= 顶部导航 ================= -->
+<header class="site-header" id="siteHeader" data-lvt-eid="42f34aa888">
+  <div class="nav-inner" data-lvt-eid="2a082af969">
+    <a class="brand" href="#/" aria-label="万店慧招" data-lvt-eid="3e35fdfaa1">
+      <svg viewBox="0 0 22 22" fill="none" aria-hidden="true" data-lvt-eid="c748c0b955">
+        <rect x="1.5" y="1.5" width="19" height="19" rx="6" stroke="url(#grad)" stroke-width="2" data-lvt-eid="09fb4cd0a3"></rect>
+        <circle cx="11" cy="11" r="3.6" fill="url(#grad)" data-lvt-eid="efcbcd68b7"></circle>
+      </svg>
+      万店慧招
+    </a>
+    <nav class="nav-center" aria-label="主导航" data-lvt-eid="8df4bcc5fe">
+      <a class="nav-link" href="#/" data-nav="home" data-lvt-eid="174b294a0a">首页</a>
+      <!-- 本轮⑯：撤销⑮下拉菜单，「应用场景」恢复普通导航项 → 子页面 #/scenarios -->
+      <a class="nav-link" href="#/scenarios" data-nav="scenarios">应用场景</a>
+      <a class="nav-link" href="#/s13" data-nav="s13" data-lvt-eid="0f080637d8">定价</a>
+      <a class="nav-link" href="#/s7" data-nav="s7" data-lvt-eid="1401c5af96">技能</a>
+    </nav>
+    <div class="nav-right" data-lvt-eid="cdc3cdbc18">
+      <button class="btn btn-grad nav-cta" id="navCta" type="button" data-lvt-eid="2a19c8f0a7">预约诊断</button>
+      <button class="btn-login" type="button" data-lvt-eid="7e841ba0ef">登录</button>
+    </div>
+    <button class="burger" id="burger" type="button" aria-label="打开菜单" aria-expanded="false" data-lvt-eid="de61883945">
+      <span data-lvt-eid="947232747e"></span><span data-lvt-eid="5c977b1a8d"></span><span data-lvt-eid="2b00a79d9e"></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu" data-lvt-eid="2696e041d7">
+    <a class="m-link" href="#/" data-lvt-eid="a60b15c033">首页</a>
+    <!-- 本轮⑯：撤销⑮手风琴，「应用场景」普通链接 → 子页面 -->
+    <a class="m-link" href="#/scenarios">应用场景</a>
+    <a class="m-link" href="#/s13" data-lvt-eid="a464a71680">定价</a>
+    <a class="m-link" href="#/s7" data-lvt-eid="b54f630551">技能</a>
+    <div class="m-btns" data-lvt-eid="9167fb263e">
+      <button class="btn-login" type="button" data-lvt-eid="1c48c0cade">登录</button>
+      <button class="btn btn-grad" type="button" data-goto="cta" data-lvt-eid="ea3d991f5d">预约诊断</button>
+    </div>
+  </div>
+</header>
+
+<main data-lvt-eid="c56b754ecb">
+<div id="viewHome">
+
+<!-- ================= S1（v2：无图，全内容居中） ================= -->
+<section class="page" id="s1" data-sec="" data-lvt-eid="0517a88f3c">
+  <div class="wrap s1-center" data-lvt-eid="26e1e5aa93">
+    <div class="eyebrow reveal" data-lvt-eid="7d62b3a2ee"><span class="e-line e-line-l" data-lvt-eid="05c4b5c2e9"></span><span class="e-text" data-lvt-eid="443e9fbba8">AI 招商总部</span><span class="e-line e-line-r" data-lvt-eid="223c3683dc"></span></div>
+    <h1 class="s1-title reveal" style="--d:80ms" data-lvt-eid="04abb3bccd">万店慧招<br data-lvt-eid="f090b51e6c"><span class="grad-text" data-lvt-eid="2af635f202">AI招商总部</span></h1>
+    <p class="s1-sub reveal" style="--d:160ms" data-lvt-eid="190fc0be51">把万店餐饮的招商方法，<br data-lvt-eid="0a44ae5f91"><span class="grad-text em" style="font-weight:700" data-lvt-eid="ff1cf0ba3a">装进你的总部。</span></p>
+    <div class="cta-row reveal" style="--d:240ms" data-lvt-eid="d03376918a">
+      <button class="btn btn-grad btn-hero" type="button" data-goto="cta" data-lvt-eid="3b34beb939">预约入企诊断</button>
+      <button class="btn-ghost" type="button" data-goto="s2" data-lvt-eid="c52b1b5752">了解更多</button>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="6b101c2023">01 / 13</span>
+</section>
+
+<!-- ================= S2 ================= -->
+<section class="page" id="s2" data-sec="" data-lvt-eid="28799353b2">
+  <div class="wrap center-col" data-lvt-eid="d2c22719d0">
+    <h2 class="s2-title reveal" data-lvt-eid="821d83be23">招商，靠人<br data-lvt-eid="8b2e42c514">增长，靠<span class="grad-text" data-lvt-eid="d07cca01c0">总部</span></h2>
+    <div class="s2-lines reveal" style="--d:120ms" data-lvt-eid="ce6bd0d354">
+      能人很重要。<br data-lvt-eid="2d572c933e">但总部，<span class="grad-text em" style="font-weight:700" data-lvt-eid="175b2fcc57">让能力留下。</span>
+    </div>
+    <div class="photo-wrap pc-169 s2-banner reveal-photo" style="--d:220ms" data-lvt-eid="e200d04a64">
+      <figure class="photo-card" data-lvt-eid="775e0587bc">
+        <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" style="object-position:center" data-lvt-eid="d19e9763cb">
+        <span class="photo-tag" data-lvt-eid="29687760a8">案例</span>
+      </figure>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="419c34ba60">02 / 13</span>
+</section>
+
+<!-- ================= S3（v2：居中排版 + 下方两张并列图与四卡对齐） ================= -->
+<section class="page" id="s3" data-sec="" data-lvt-eid="05e41dc86e">
+  <div class="wrap" data-lvt-eid="36b0fddb9f">
+    <div class="eyebrow reveal" data-lvt-eid="410374c68c"><span class="e-line" data-lvt-eid="b1553a8045"></span></div>
+    <h2 class="sec-title reveal" style="--d:60ms" data-lvt-eid="bdc04a2568">不是多一个AI工具<br data-lvt-eid="4ba1e74931"><span class="grad-text" data-lvt-eid="f3e9a1d728">是多一个AI招商总部</span></h2>
+    <div class="s3-grid" data-stagger="100" data-lvt-eid="1dccd1dbf8">
+      <div class="card reveal" data-lvt-eid="5ca71b136b">
+        <svg class="c-icon" viewBox="0 0 56 56" fill="none" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" aria-hidden="true" data-lvt-eid="2465cf6952">
+          <circle cx="28" cy="28" r="6" data-lvt-eid="5eb2a6e527"></circle><circle cx="28" cy="8" r="3.4" data-lvt-eid="f209bf7be0"></circle><circle cx="48" cy="28" r="3.4" data-lvt-eid="f68be64f47"></circle><circle cx="28" cy="48" r="3.4" data-lvt-eid="34c5311a2b"></circle><circle cx="8" cy="28" r="3.4" data-lvt-eid="8660384449"></circle>
+          <path d="M28 14.6v7.4M41.4 28h-7.4M28 41.4V34M14.6 28h7.4" data-lvt-eid="b2b2ae7c87"></path>
+        </svg>
+        <div class="c-title" data-lvt-eid="98e8ad71ad">一个总控Agent</div>
+      </div>
+      <div class="card reveal" data-lvt-eid="66f0fa2327">
+        <svg class="c-icon" viewBox="0 0 56 56" fill="none" stroke="url(#grad)" stroke-width="2" stroke-linejoin="round" aria-hidden="true" data-lvt-eid="3563d29aa5">
+          <path d="M28 6l19 11v22L28 50 9 39V17z" data-lvt-eid="7a27b9a65a"></path><circle cx="28" cy="28" r="5" data-lvt-eid="ed3ae33521"></circle>
+        </svg>
+        <div class="c-title" data-lvt-eid="d0164f5852">六大中心</div>
+      </div>
+      <div class="card reveal" data-lvt-eid="097c104f21">
+        <svg class="c-icon" viewBox="0 0 56 56" fill="none" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" aria-hidden="true" data-lvt-eid="7535615af6">
+          <circle cx="14" cy="14" r="5" data-lvt-eid="13b7e64194"></circle><circle cx="42" cy="22" r="5" data-lvt-eid="c35a9f4e89"></circle><circle cx="20" cy="42" r="5" data-lvt-eid="9efb7cd7f9"></circle>
+          <path d="M18.4 16.8L37.4 20.6M38.6 26.2L23.8 38.4M15.6 19.2l3.2 17.6" data-lvt-eid="57d752ec07"></path>
+        </svg>
+        <div class="c-title" data-lvt-eid="bae8abd3d1">一群专业Agent</div>
+      </div>
+      <div class="card reveal" data-lvt-eid="84aea6b7a3">
+        <svg class="c-icon" viewBox="0 0 56 56" fill="none" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" aria-hidden="true" data-lvt-eid="107c3489d3">
+          <path d="M10 40a18 18 0 1 1 36 0" data-lvt-eid="7476edf621"></path><path d="M28 40L38 26" data-lvt-eid="6f34c62a9c"></path><circle cx="28" cy="40" r="2.6" data-lvt-eid="7628919b67"></circle>
+          <path d="M6 46h44M14 18l-3-3M42 18l3-3M28 10V6" data-lvt-eid="303a80e45d"></path>
+        </svg>
+        <div class="c-title" data-lvt-eid="b4a8164241">一套驾驶舱</div>
+      </div>
+    </div>
+    <div class="duo-banner" aria-label="案例图（两张并列）" data-lvt-eid="0f6ec27ff5">
+      <div class="photo-wrap reveal-photo" style="--d:200ms" data-lvt-eid="7af85c9626">
+        <figure class="photo-card" data-lvt-eid="d4d089787e">
+          <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="f471af16e8">
+          <span class="photo-tag" data-lvt-eid="6e5584975e">案例</span>
+          <span class="photo-caption" data-lvt-eid="b40faa55a7">案例一</span>
+        </figure>
+      </div>
+      <div class="photo-wrap reveal-photo" style="--d:300ms" data-lvt-eid="bd26cf2e0f">
+        <figure class="photo-card" data-lvt-eid="687d7369e5">
+          <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="1322d84869">
+          <span class="photo-tag" data-lvt-eid="d03fe5e264">案例</span>
+          <span class="photo-caption" data-lvt-eid="2028f71eb0">案例二</span>
+        </figure>
+      </div>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="053ea7cde7">03 / 13</span>
+</section>
+
+<!-- ================= S4 ================= -->
+<section class="page soft" id="s4" data-sec="" data-lvt-eid="a26765ab2e">
+  <div class="wrap" data-lvt-eid="084964c62a">
+    <div class="grid-2 g-1-45" data-lvt-eid="fef3c74882">
+      <div class="g-text" data-lvt-eid="83c273558f">
+        <div class="eyebrow reveal" data-lvt-eid="3824a4f7b9"><span class="e-line" data-lvt-eid="54c93fb3bd"></span></div>
+        <h2 class="sec-title reveal" style="--d:60ms" data-lvt-eid="44ca850a4a">复杂，留给系统<br data-lvt-eid="c5cc431327"><span class="grad-text" data-lvt-eid="0cf8c05637">简单，留给老板</span></h2>
+        <div class="tail reveal" style="--d:160ms" data-lvt-eid="82b3ad2bb2">
+          线索、签约、回款、开业、存活。一屏看清。<br data-lvt-eid="1a6b9e82de">
+          <span class="grad-line grad-text" data-lvt-eid="9889d35517">一个入口，调度全局。</span>
+        </div>
+      </div>
+      <div class="g-photo" data-lvt-eid="c9ffd852e1">
+        <div class="photo-wrap s4-photo reveal-photo pc-43" style="--d:200ms" data-lvt-eid="170e7142fa">
+          <figure class="photo-card" data-lvt-eid="cb4fc9d35c">
+            <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="1f6cfd6703">
+            <span class="photo-tag" data-lvt-eid="59361a18f6">案例</span>
+          </figure>
+          <div class="stage-bar" aria-label="五阶段" data-lvt-eid="c2ffb9bb7f">
+            <span class="st" data-lvt-eid="7f2d951f85"><span class="stage-pill" data-lvt-eid="0aab0b50dc">线索</span></span>
+            <span class="stage-arrow" aria-hidden="true" data-lvt-eid="8621a398ea"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-lvt-eid="1d5625b8d3"><path d="M2 7h10M8 3l4 4-4 4" data-lvt-eid="7cf627606b"></path></svg></span>
+            <span class="st" data-lvt-eid="cb886c14e7"><span class="stage-pill" data-lvt-eid="d30d466760">签约</span></span>
+            <span class="stage-arrow" aria-hidden="true" data-lvt-eid="105b0e6db5"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-lvt-eid="0f0c5206ae"><path d="M2 7h10M8 3l4 4-4 4" data-lvt-eid="2c86923eba"></path></svg></span>
+            <span class="st" data-lvt-eid="e101e5cdde"><span class="stage-pill" data-lvt-eid="820804f16c">回款</span></span>
+            <span class="stage-arrow" aria-hidden="true" data-lvt-eid="b07b66ff2f"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-lvt-eid="6b765dfa1d"><path d="M2 7h10M8 3l4 4-4 4" data-lvt-eid="632dde0236"></path></svg></span>
+            <span class="st" data-lvt-eid="fccdb0e8a1"><span class="stage-pill" data-lvt-eid="dc232e1dd6">开业</span></span>
+            <span class="stage-arrow" aria-hidden="true" data-lvt-eid="70d1695dbb"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-lvt-eid="b6389aec3d"><path d="M2 7h10M8 3l4 4-4 4" data-lvt-eid="1e68fbccc6"></path></svg></span>
+            <span class="st" data-lvt-eid="401bfa3d2f"><span class="stage-pill" data-lvt-eid="a6e566c316">存活</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="55b679a371">04 / 13</span>
+</section>
+
+<!-- ================= S5 ================= -->
+<section class="page" id="s5" data-sec="" data-lvt-eid="b26535577c">
+  <div class="wrap" data-lvt-eid="881cb2b294">
+    <div class="grid-2 g-1-45 stretch" data-lvt-eid="6ee61e1bbe">
+      <div class="g-text" data-lvt-eid="ead86438a9">
+        <div class="eyebrow reveal" data-lvt-eid="4fc83754a1"><span class="e-line" data-lvt-eid="313136293a"></span></div>
+        <h2 class="sec-title reveal" style="--d:60ms" data-lvt-eid="deee451e93">慧招总控Agent</h2>
+        <p class="sec-sub reveal" style="--d:140ms" data-lvt-eid="a9b5bbd626">它不替你决策。<br data-lvt-eid="dce374dd0d"><span class="grad-text em" style="font-weight:700" data-lvt-eid="8531ca8ed9">它让该发生的事，按时发生。</span></p>
+        <div class="mini-grid" data-stagger="80" data-lvt-eid="fd52c389ea">
+          <div class="mini-card reveal" data-lvt-eid="fae76333d9">
+            <svg viewBox="0 0 24 24" fill="none" stroke="url(#grad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-lvt-eid="b320f16aa2"><rect x="4" y="3" width="16" height="18" rx="3" data-lvt-eid="8164f9f383"></rect><path d="M8 8.5l1.4 1.4L12 7.3M8 15l1.4 1.4L12 13.8M15 9h2M15 15.5h2" data-lvt-eid="c29ab84797"></path></svg>
+            <span class="m-text" data-lvt-eid="77dc9e8ebf">今日待办</span>
+          </div>
+          <div class="mini-card reveal" data-lvt-eid="2f63ff9d96">
+            <svg viewBox="0 0 24 24" fill="none" stroke="url(#grad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-lvt-eid="6af37bd4d9"><path d="M12 3.5L22 20H2z" data-lvt-eid="5c51a69883"></path><path d="M12 9.5v5M12 17.4v.2" data-lvt-eid="b57a58bec9"></path></svg>
+            <span class="m-text" data-lvt-eid="3ddc02b64a">风险预警</span>
+          </div>
+          <div class="mini-card reveal" data-lvt-eid="1316e6786e">
+            <svg viewBox="0 0 24 24" fill="none" stroke="url(#grad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-lvt-eid="3aa4595f1f"><circle cx="5" cy="12" r="2.6" data-lvt-eid="3434cd2806"></circle><circle cx="19" cy="6" r="2.6" data-lvt-eid="a3a50f5cd6"></circle><circle cx="19" cy="18" r="2.6" data-lvt-eid="3a7b768300"></circle><path d="M7.5 11L16.5 7M7.5 13l9 4" data-lvt-eid="459bc2ffe5"></path></svg>
+            <span class="m-text" data-lvt-eid="5855a18e20">跨中心调度</span>
+          </div>
+          <div class="mini-card reveal" data-lvt-eid="215b85bbab">
+            <svg viewBox="0 0 24 24" fill="none" stroke="url(#grad)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-lvt-eid="0611c869b3"><circle cx="9.5" cy="8" r="3.4" data-lvt-eid="b3bc6d4138"></circle><path d="M3.5 20c.6-3.4 3-5.2 6-5.2 1.2 0 2.3.3 3.2.8" data-lvt-eid="58fefb0a22"></path><path d="M14.5 16.5l2 2 4-4.4" data-lvt-eid="a2226f61af"></path></svg>
+            <span class="m-text" data-lvt-eid="6fdd189401">人机审批</span>
+          </div>
+        </div>
+        <div class="s5-trace grad-text reveal" style="--d:320ms" data-lvt-eid="6dcc98febe">每一步，都留痕。</div>
+      </div>
+      <div class="g-photo" data-lvt-eid="4207f31b16">
+        <div class="photo-wrap pc-43 reveal-photo" style="--d:200ms" data-lvt-eid="4d8d46c7ce">
+          <figure class="photo-card" data-lvt-eid="fd5693c347">
+            <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="d7b17170d0">
+            <span class="photo-tag" data-lvt-eid="a3f1f42e3b">案例</span>
+            <span class="pulse-ring pr1" aria-hidden="true" data-lvt-eid="cc35b0c7b6"></span>
+            <span class="pulse-ring pr2" aria-hidden="true" data-lvt-eid="b1636695d8"></span>
+            <span class="pulse-dot" aria-hidden="true" data-lvt-eid="7861a791e4"></span>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="f249553869">05 / 13</span>
+</section>
+
+<!-- ================= S6 ================= -->
+<section class="page" id="s6" data-sec="" data-lvt-eid="f3e9bd1b20">
+  <div class="wrap" data-lvt-eid="0f93b2e59b">
+    <div class="grid-2 g-58-42 stretch" data-lvt-eid="b5891af0d3">
+      <div class="g-text" data-lvt-eid="5002e25e09">
+        <div class="eyebrow reveal" data-lvt-eid="ebe56c2c50"><span class="e-line" data-lvt-eid="329b346016"></span></div>
+        <h2 class="sec-title reveal" style="--d:60ms" data-lvt-eid="79590c859f">六大中心<br data-lvt-eid="d7cb1102d1"><span class="grad-text" data-lvt-eid="8b6ea6fd67">一个总部</span></h2>
+        <div class="six-grid" data-stagger="80" data-lvt-eid="6200eeca10">
+          <div class="six-card reveal" data-lvt-eid="3875f0bdca"><div class="six-num grad-text" data-lvt-eid="455f59ca62">01</div><div class="six-title" data-lvt-eid="6bcea8d1fd">战略与政策中心</div><div class="six-line" data-lvt-eid="08e9ae7c57"></div></div>
+          <div class="six-card reveal" data-lvt-eid="f3d9ac52e6"><div class="six-num grad-text" data-lvt-eid="1c212452cf">02</div><div class="six-title" data-lvt-eid="bd749fd992">线索增长与内容中心</div><div class="six-line" data-lvt-eid="2d42bec1eb"></div></div>
+          <div class="six-card reveal" data-lvt-eid="358dfa90ef"><div class="six-num grad-text" data-lvt-eid="39065b6025">03</div><div class="six-title" data-lvt-eid="5de10333f8">成交转化中心</div><div class="six-line" data-lvt-eid="4bed44b339"></div></div>
+          <div class="six-card reveal" data-lvt-eid="befdec12f5"><div class="six-num grad-text" data-lvt-eid="0ebffa1094">04</div><div class="six-title" data-lvt-eid="1b528c6ae4">加盟商经营中心</div><div class="six-line" data-lvt-eid="60b495c9e5"></div></div>
+          <div class="six-card reveal" data-lvt-eid="2f5577b2c1"><div class="six-num grad-text" data-lvt-eid="775a7d94de">05</div><div class="six-title" data-lvt-eid="cd3359968c">合规风控中心</div><div class="six-line" data-lvt-eid="3cb0c205f8"></div></div>
+          <div class="six-card reveal" data-lvt-eid="74a5f80f8b"><div class="six-num grad-text" data-lvt-eid="2fedd48bd1">06</div><div class="six-title" data-lvt-eid="83fbc133df">组织赋能与Agent协同中心</div><div class="six-line" data-lvt-eid="8a5d4dc518"></div></div>
+        </div>
+        <div class="s6-foot reveal" style="--d:160ms" data-lvt-eid="608e44da0b">各管一段。<span class="foot-dot" aria-hidden="true" data-lvt-eid="bded1f6297"></span><span class="grad-text" style="font-weight:700" data-lvt-eid="ebce04092c">一起闭环。</span></div>
+      </div>
+      <div class="g-photo s6-photo" data-lvt-eid="c5f0743646">
+        <div class="photo-wrap pc-45 reveal-photo" style="--d:200ms" data-lvt-eid="d76d9067ae">
+          <figure class="photo-card" data-lvt-eid="681dddacc2">
+            <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="4c710ccb5b">
+            <span class="photo-tag" data-lvt-eid="4bdc75fdfb">案例</span>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="d8c82c6fbb">06 / 13</span>
+</section>
+
+<!-- ================= S7（v2：下方两张并列图与芯片网格对齐） ================= -->
+<section class="page soft" id="s7" data-sec="" data-lvt-eid="c2f200538f">
+  <div class="wrap" data-lvt-eid="6020fad5dc">
+    <div class="eyebrow reveal" style="justify-content:center" data-lvt-eid="2ebf96e621"><span class="e-line" data-lvt-eid="2a6a58c5a2"></span></div>
+    <h2 class="sec-title reveal" style="--d:60ms;text-align:center" data-lvt-eid="80a65af9a4">一群专业Agent<br data-lvt-eid="baea39c00a"><span class="grad-text" data-lvt-eid="28de6a86ef">各司其职。也一起工作。</span></h2>
+    <div class="chip-grid" data-stagger="60" data-lvt-eid="7939518dcf">
+      <span class="chip reveal" data-lvt-eid="5dac335396">趋势官</span>
+      <span class="chip reveal" data-lvt-eid="3c67c050f6">诊断官</span>
+      <span class="chip reveal" data-lvt-eid="2aaffaa526">政策官</span>
+      <span class="chip reveal" data-lvt-eid="69ea2c784b">内容官</span>
+      <span class="chip reveal" data-lvt-eid="761a266289">投流官</span>
+      <span class="chip reveal" data-lvt-eid="d4483599a4">成交官</span>
+      <span class="chip reveal" data-lvt-eid="61b75b4fe9">风控官</span>
+      <span class="chip reveal" data-lvt-eid="8835a8a244">开业官</span>
+      <span class="chip reveal" data-lvt-eid="bbf8f3e530">督导官</span>
+      <span class="chip reveal" data-lvt-eid="eaafc87759">数据官</span>
+      <span class="chip reveal" data-lvt-eid="e5a5e08d75">协作官</span>
+    </div>
+    <div class="duo-banner" aria-label="案例图（两张并列）" data-lvt-eid="9118b2a1c2">
+      <div class="photo-wrap reveal-photo" style="--d:200ms" data-lvt-eid="b3b48a1f6f">
+        <figure class="photo-card" data-lvt-eid="7f554c03f3">
+          <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="5d8bdda93b">
+          <span class="photo-tag" data-lvt-eid="5fa5fc0846">案例</span>
+          <span class="photo-caption" data-lvt-eid="74da135bfe">案例一</span>
+        </figure>
+      </div>
+      <div class="photo-wrap reveal-photo" style="--d:300ms" data-lvt-eid="acb5ea0927">
+        <figure class="photo-card" data-lvt-eid="b07eae7a32">
+          <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="0ab429ae33">
+          <span class="photo-tag" data-lvt-eid="0c8287ba34">案例</span>
+          <span class="photo-caption" data-lvt-eid="7d626b8bf9">案例二</span>
+        </figure>
+      </div>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="fbb80413aa">07 / 13</span>
+</section>
+
+<!-- ================= S8 ================= -->
+<section class="page" id="s8" data-sec="" data-lvt-eid="e121acf325">
+  <div class="wrap" data-lvt-eid="131ba43e58">
+    <div class="grid-2 g-52-48 stretch" data-lvt-eid="f14f52eebb">
+      <div class="g-text" data-lvt-eid="c54689cd82">
+        <div class="eyebrow reveal" data-lvt-eid="5c519dddb6"><span class="e-line" data-lvt-eid="9b55c2a10b"></span></div>
+        <h2 class="sec-title reveal" style="--d:60ms" data-lvt-eid="7b6358244d">AI生成<br data-lvt-eid="8dce5fe4c3"><span class="grad-text" data-lvt-eid="5559e05eed">专家校准</span></h2>
+        <div class="s8-cards" data-stagger="100" data-lvt-eid="b105e31d6d">
+          <div class="card reveal" data-lvt-eid="ac1bdb1345">
+            <svg class="c-icon" viewBox="0 0 48 48" fill="none" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-lvt-eid="155a48461a"><rect x="6" y="10" width="8" height="30" rx="2" data-lvt-eid="2c34e03ff2"></rect><rect x="17" y="6" width="8" height="34" rx="2" data-lvt-eid="978810e73a"></rect><path d="M29 12l8-2 5 28-8 2z" data-lvt-eid="fa1981eddd"></path></svg>
+            <div class="c-title" data-lvt-eid="d01ce12414">50万字知识库，是方法。</div>
+          </div>
+          <div class="card reveal" data-lvt-eid="bf55fe4920">
+            <svg class="c-icon" viewBox="0 0 48 48" fill="none" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-lvt-eid="34600cc0c7"><path d="M24 5l16 6v12c0 10-6.8 17.4-16 20-9.2-2.6-16-10-16-20V11z" data-lvt-eid="31b4744dbc"></path><path d="M17 24l5 5 10-10" data-lvt-eid="1d72720b09"></path></svg>
+            <div class="c-title" data-lvt-eid="82a73d2e82">FDE专家，是边界。</div>
+          </div>
+          <div class="card reveal" data-lvt-eid="df54ec106f">
+            <svg class="c-icon" viewBox="0 0 48 48" fill="none" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-lvt-eid="1496df4926"><circle cx="19" cy="15" r="7" data-lvt-eid="197e4df1ab"></circle><path d="M6 40c1.2-7 6-10.6 13-10.6 2.6 0 4.9.5 6.9 1.4" data-lvt-eid="627c5368ba"></path><path d="M29 32l4.6 4.6L43 27" data-lvt-eid="8215930b30"></path></svg>
+            <div class="c-title" data-lvt-eid="a413d1cf64">人审，是责任。</div>
+          </div>
+        </div>
+        <div class="tail tail-oneline reveal" style="--d:160ms" data-lvt-eid="3f87e1bd75">AI不自由发挥。<span class="grad-line grad-text" data-lvt-eid="11bb94efc5">AI按万店方法说。</span></div>
+      </div>
+      <div class="g-photo" data-lvt-eid="7772a2b4b5">
+        <div class="photo-wrap pc-43 reveal-photo" style="--d:200ms" data-lvt-eid="2bbfef071a">
+          <figure class="photo-card" data-lvt-eid="c23cf94988">
+            <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="612ba07b9e">
+            <span class="photo-tag" data-lvt-eid="66c86de536">案例</span>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="6ab19636e0">08 / 13</span>
+</section>
+
+<!-- ================= S9 ================= -->
+<section class="page" id="s9" data-sec="" data-lvt-eid="5c80f5a392">
+  <div class="wrap" data-lvt-eid="6f2e055b27">
+    <div class="eyebrow reveal" style="justify-content:center" data-lvt-eid="9e8ca6cdbc"><span class="e-line" data-lvt-eid="6f804605ea"></span></div>
+    <h2 class="sec-title reveal" style="--d:60ms;text-align:center" data-lvt-eid="88f0d0f383">从线索，到开业<br data-lvt-eid="00c146b344"><span class="grad-text" data-lvt-eid="f7a5a330ca">从开业，到存活</span></h2>
+    <div class="timeline reveal" style="--d:140ms" aria-label="从线索到存活" data-lvt-eid="1ac933899f">
+      <div class="t-node" data-lvt-eid="940c5fbba6"><span class="t-dot" data-lvt-eid="c023c4c063"></span><span class="t-label" data-lvt-eid="e21cf36d53">线索</span></div>
+      <div class="t-node" data-lvt-eid="dfe9b7383c"><span class="t-dot" data-lvt-eid="239403b588"></span><span class="t-label" data-lvt-eid="fb24a8ff62">签约</span></div>
+      <div class="t-node" data-lvt-eid="9bc3aed2e1"><span class="t-dot" data-lvt-eid="b7945388ab"></span><span class="t-label" data-lvt-eid="b93fcace82">回款</span></div>
+      <div class="t-node" data-lvt-eid="69fa6c74cc"><span class="t-dot" data-lvt-eid="771446a19c"></span><span class="t-label" data-lvt-eid="533edbd16c">开业</span></div>
+      <div class="t-node" data-lvt-eid="bbc856f06d"><span class="t-dot" data-lvt-eid="df4222bd5b"></span><span class="t-label" data-lvt-eid="a95c99731d">存活</span></div>
+    </div>
+    <div class="s9-lines reveal" style="--d:200ms;text-align:center" data-lvt-eid="0d53b10599">
+      招商总部，不只管“招”。<br data-lvt-eid="cad848ca04"><span class="grad-text" style="font-weight:700" data-lvt-eid="10346c334d">还管“开得好、活得久、能裂变”。</span>
+    </div>
+    <div class="photo-wrap pc-169 s9-banner reveal-photo" style="--d:260ms" data-lvt-eid="167436fa55">
+      <figure class="photo-card" data-lvt-eid="6231d8d416">
+        <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="00b45f2a69">
+        <span class="photo-tag" data-lvt-eid="5762ae83ab">案例</span>
+      </figure>
+    </div>
+    <div class="s9-end reveal" style="--d:320ms;text-align:center" data-lvt-eid="97c7b40478">签约不是终点。<br data-lvt-eid="76871dc1e5"><span class="grad-text" style="font-weight:700" data-lvt-eid="65925b708e">开业，才是开始。</span></div>
+  </div>
+  <span class="sec-num" data-lvt-eid="bb85c2b5be">09 / 13</span>
+</section>
+
+<!-- ================= S13（主页保留展示；三阶段卡可点 → 应用场景子页面对应屏） ================= -->
+<section class="page soft" id="s13" data-sec="" data-lvt-eid="9361369236">
+  <div class="wrap" data-lvt-eid="322d596d7e">
+    <div class="grid-2 g-55-45 stretch" data-lvt-eid="ecf780c856">
+      <div class="g-text" data-lvt-eid="50fe635a31">
+        <div class="eyebrow reveal" data-lvt-eid="9afd32a3e5"><span class="e-line" data-lvt-eid="78b41a4e39"></span></div>
+        <h2 class="sec-title s13-title reveal" style="--d:60ms" data-lvt-eid="d19c94b3cd">
+          <span class="t-line" data-lvt-eid="b7485da7c3">先闭环</span>
+          <span class="t-line" data-lvt-eid="6be4e97a2f">再护城河</span>
+          <span class="t-line grad-text" data-lvt-eid="e4e124c83a">再生态</span>
+        </h2>
+        <div class="stage-cards reveal" style="--d:200ms" data-lvt-eid="2a41e3e700">
+          <a class="stage-card" href="#/scenarios/s10" aria-label="1.0 能成交，查看应用场景" data-lvt-eid="a196919606"><div class="sc-ver grad-text" data-lvt-eid="c1bad4b705">1.0</div><div class="sc-name" data-lvt-eid="372e9f7bbf">能成交</div><span class="sc-go" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" stroke="url(#grad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9h13M11 4.5l4.5 4.5-4.5 4.5"></path></svg></span></a>
+          <span class="stage-link" aria-hidden="true" data-lvt-eid="21f07eb1db"><svg viewBox="0 0 22 22" fill="none" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lvt-eid="6ad2a58eda"><path d="M3 11h16M13 5l6 6-6 6" data-lvt-eid="ea2113521f"></path></svg></span>
+          <a class="stage-card" href="#/scenarios/s11" aria-label="2.0 能管店，查看应用场景" data-lvt-eid="15e82eba0f"><div class="sc-ver grad-text" data-lvt-eid="1bc8eea463">2.0</div><div class="sc-name" data-lvt-eid="c306ac2756">能管店</div><span class="sc-go" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" stroke="url(#grad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9h13M11 4.5l4.5 4.5-4.5 4.5"></path></svg></span></a>
+          <span class="stage-link" aria-hidden="true" data-lvt-eid="0c2ecf901b"><svg viewBox="0 0 22 22" fill="none" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lvt-eid="a9e4ab5bce"><path d="M3 11h16M13 5l6 6-6 6" data-lvt-eid="c08a47a5d9"></path></svg></span>
+          <a class="stage-card" href="#/scenarios/s12" aria-label="3.0 能决策，查看应用场景" data-lvt-eid="81483bafbc"><div class="sc-ver grad-text" data-lvt-eid="27e7c5d497">3.0</div><div class="sc-name" data-lvt-eid="b84bbd16c0">能决策</div><span class="sc-go" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" stroke="url(#grad)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9h13M11 4.5l4.5 4.5-4.5 4.5"></path></svg></span></a>
+        </div>
+        <div class="tail reveal" style="--d:280ms" data-lvt-eid="6b41790ccd">不一次做完。<br data-lvt-eid="59e368e81d"><span class="grad-line grad-text" data-lvt-eid="a64b784d5b">但每一步，都算数。</span></div>
+      </div>
+      <div class="g-photo" data-lvt-eid="ffadcd5252">
+        <div class="photo-wrap pc-43 reveal-photo" style="--d:200ms" data-lvt-eid="11f9a472da">
+          <figure class="photo-card" data-lvt-eid="9d20efdd3f">
+            <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="6fadca7ff3">
+            <span class="photo-tag" data-lvt-eid="07a44b66cd">案例</span>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="ae7349bbb0">13 / 13</span>
+</section>
+
+<!-- ================= 底部转化区（主页视图收尾） ================= -->
+<section class="page soft" id="cta" data-lvt-eid="999c5a29c6">
+  <div class="wrap center-col" data-lvt-eid="855e5555f5">
+    <h2 class="cta-title reveal" data-lvt-eid="d5523354e9">万店慧招</h2>
+    <p class="cta-sub reveal" style="--d:100ms" data-lvt-eid="6f0c013f7f">把AI招商总部<span class="grad-text" style="font-weight:700" data-lvt-eid="9819f37352">装进企业。</span></p>
+    <div class="reveal" style="--d:180ms" data-lvt-eid="5b8605a045">
+      <button class="btn btn-grad btn-final" type="button" data-goto="s1" data-lvt-eid="0ff21faeb4">回到顶部</button>
+    </div>
+  </div>
+</section>
+
+</div><!-- /#viewHome 主页视图：s1–s9 + s13 + cta -->
+
+<!-- ================= 应用场景子页面视图（#/scenarios：s10–s12） ================= -->
+<div id="viewScenarios">
+
+<!-- 子页页头条：返回首页 + 小标题（固定导航之下，随滚动移出） -->
+<div class="scen-bar">
+  <a class="back-btn" href="#/" aria-label="返回首页">
+    <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 7.5h-10M6.5 3.5l-4 4 4 4"></path></svg>返回首页
+  </a>
+  <span class="scen-bar-title">应用场景</span>
+</div>
+
+<!-- ================= S10 ================= -->
+<section class="page" id="s10" data-sec="" data-lvt-eid="c311130e4c">
+  <div class="wrap" data-lvt-eid="f79375e081">
+    <div class="grid-2 g-56-44 stretch" data-lvt-eid="a662efafb3">
+      <div class="g-text" data-lvt-eid="936890a1d0">
+        <div class="reveal" data-lvt-eid="882c874300"><span class="ver-badge" data-lvt-eid="553daae8ec">1.0</span></div>
+        <h2 class="sec-title reveal" style="--d:60ms" data-lvt-eid="e27e3754d3">1.0 能成交</h2>
+        <div class="pill-row reveal" style="--d:140ms" data-lvt-eid="089b7b3bd1">
+          <span class="f-pill" data-lvt-eid="08ed2698c5">工作台</span>
+          <span class="f-pill" data-lvt-eid="affb327f4e">诊断</span>
+          <span class="f-pill" data-lvt-eid="1718e6da3b">CRM</span>
+          <span class="f-pill" data-lvt-eid="dc281b5237">企微</span>
+          <span class="f-pill" data-lvt-eid="c23d3196eb">内容与投流</span>
+          <span class="f-pill" data-lvt-eid="f581904e75">合规基础</span>
+          <span class="f-pill" data-lvt-eid="5732dc1ee1">驾驶舱</span>
+        </div>
+        <div class="tail reveal" style="--d:220ms" data-lvt-eid="103352fded">先跑通：</div>
+        <div class="flow-row reveal" style="--d:260ms" data-lvt-eid="088783be5f">
+          <span class="flow-pill" data-lvt-eid="6906774961">课</span>
+          <span class="flow-arrow" aria-hidden="true" data-lvt-eid="e489e771ad"><svg viewBox="0 0 16 16" fill="none" stroke="url(#grad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-lvt-eid="316b29d26b"><path d="M2 8h12M10 4l4 4-4 4" data-lvt-eid="22c26e6b64"></path></svg></span>
+          <span class="flow-pill" data-lvt-eid="3ccb6f428b">诊断</span>
+          <span class="flow-arrow" aria-hidden="true" data-lvt-eid="e8a5826d24"><svg viewBox="0 0 16 16" fill="none" stroke="url(#grad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-lvt-eid="f6c57f3377"><path d="M2 8h12M10 4l4 4-4 4" data-lvt-eid="35a940f6f0"></path></svg></span>
+          <span class="flow-pill" data-lvt-eid="59e9e1047e">签约</span>
+          <span class="flow-arrow" aria-hidden="true" data-lvt-eid="aa6089c9ef"><svg viewBox="0 0 16 16" fill="none" stroke="url(#grad)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-lvt-eid="a3cfabc983"><path d="M2 8h12M10 4l4 4-4 4" data-lvt-eid="906ec29600"></path></svg></span>
+          <span class="flow-pill" data-lvt-eid="e394263435">交付</span>
+        </div>
+      </div>
+      <div class="g-photo" data-lvt-eid="2e067cb105">
+        <div class="photo-wrap pc-43 reveal-photo" style="--d:200ms" data-lvt-eid="3ea8a6a5a1">
+          <figure class="photo-card" data-lvt-eid="fb945271a0">
+            <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="7c1521027e">
+            <span class="photo-tag" data-lvt-eid="ec8e4c619b">案例</span>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="f3b3a71f28">10 / 13</span>
+</section>
+
+<!-- ================= S11 ================= -->
+<section class="page soft" id="s11" data-sec="" data-lvt-eid="0f7166eed2">
+  <div class="wrap" data-lvt-eid="1f3afb19a1">
+    <div class="grid-2 g-56-44 stretch" data-lvt-eid="1f8455cb56">
+      <div class="g-text" data-lvt-eid="4cbe3556c0">
+        <div class="reveal" data-lvt-eid="b8b066d44e"><span class="ver-badge" data-lvt-eid="6602550b5b">2.0</span></div>
+        <h2 class="sec-title reveal" style="--d:60ms" data-lvt-eid="d38dfaae65">2.0 能管店</h2>
+        <div class="pill-row reveal" style="--d:140ms" data-lvt-eid="9782e14159">
+          <span class="f-pill" data-lvt-eid="7af443fead">政策沙盘</span>
+          <span class="f-pill" data-lvt-eid="c95372d46f">区域保护</span>
+          <span class="f-pill" data-lvt-eid="bba8088704">选址评估</span>
+          <span class="f-pill" data-lvt-eid="27f0cda23c">开业督导</span>
+          <span class="f-pill" data-lvt-eid="933633b4a4">存活预测</span>
+          <span class="f-pill" data-lvt-eid="efae6739d7">会销转化</span>
+          <span class="f-pill" data-lvt-eid="2f05a34ba0">数据中台</span>
+        </div>
+        <div class="tail reveal" style="--d:220ms" data-lvt-eid="82182ec565">从招商前端，<br data-lvt-eid="8566cef755"><span class="grad-line grad-text" data-lvt-eid="c05122424e">升级为加盟商经营总部。</span></div>
+      </div>
+      <div class="g-photo" data-lvt-eid="e4b5120e6e">
+        <div class="photo-wrap pc-43 reveal-photo" style="--d:200ms" data-lvt-eid="5fd54f80fa">
+          <figure class="photo-card" data-lvt-eid="344406f8fb">
+            <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="0614fb749a">
+            <span class="photo-tag" data-lvt-eid="101457ed16">案例</span>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="a4b2123fcf">11 / 13</span>
+</section>
+
+<!-- ================= S12 ================= -->
+<section class="page" id="s12" data-sec="" data-lvt-eid="f4643d56cc">
+  <div class="wrap" data-lvt-eid="deecc887ce">
+    <div class="grid-2 g-56-44 stretch" data-lvt-eid="83c66d81fa">
+      <div class="g-text" data-lvt-eid="bc59edb292">
+        <div class="reveal" data-lvt-eid="135f9441da"><span class="ver-badge" data-lvt-eid="0c7eb9b5c7">3.0</span></div>
+        <h2 class="sec-title reveal" style="--d:60ms" data-lvt-eid="ccfb0b14bb">3.0 能决策</h2>
+        <div class="pill-row reveal" style="--d:140ms" data-lvt-eid="9f020ae7dc">
+          <span class="f-pill" data-lvt-eid="1b4cd72932">招商仿真沙盘</span>
+          <span class="f-pill" data-lvt-eid="b63b13cd31">加盟商LTV评分</span>
+          <span class="f-pill" data-lvt-eid="38b2bc579f">AI数字人招商官</span>
+          <span class="f-pill" data-lvt-eid="f95eab44bb">行业Benchmark</span>
+          <span class="f-pill" data-lvt-eid="13895b61d2">开放平台与私有化</span>
+        </div>
+        <div class="tail reveal" style="--d:220ms" data-lvt-eid="e7191a7c28">不只看见现在。<br data-lvt-eid="28220e447c"><span class="grad-line grad-text" data-lvt-eid="02d65bc8b2">还能模拟未来。</span></div>
+      </div>
+      <div class="g-photo" data-lvt-eid="cf0883f497">
+        <div class="photo-wrap pc-43 reveal-photo" style="--d:200ms" data-lvt-eid="46cf1ccf5d">
+          <figure class="photo-card" data-lvt-eid="50f5e1ebce">
+            <img class="case-photo" src="https://xla-persist.xingliu.art/artifacts/user/jklPawKCFhDb6qJw.png" alt="连锁餐饮案例（示意图）" loading="lazy" data-lvt-eid="a1391fd5cc">
+            <span class="photo-tag" data-lvt-eid="df1f13f544">案例</span>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="sec-num" data-lvt-eid="eb88cf051b">12 / 13</span>
+</section>
+
+<!-- 子页底部收尾条：返回首页 + 预约入企诊断（复用既有文案，无新增） -->
+<div class="scen-end">
+  <a class="se-link" href="#/">返回首页</a>
+  <span class="se-div" aria-hidden="true"></span>
+  <a class="se-btn" href="#/cta">预约入企诊断</a>
+</div>
+
+</div><!-- /#viewScenarios 应用场景子页面视图 -->
+
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- 本轮⑯：导航高亮映射（定义在 IIFE 顶层，供 IO 与路由共用） ---------- */
+  var links = {};
+  document.querySelectorAll('.nav-link[data-nav]').forEach(function(a){
+    links[a.getAttribute('data-nav')] = a;
+  });
+  var navMap = { s1:'home', s7:'s7', s13:'s13' }; /* 主页 section → 导航项；子页面固定 scenarios */
+  var currentActive = null;
+  function clearNavActive(){
+    if(currentActive) currentActive.classList.remove('active');
+    currentActive = null;
+  }
+  function setActive(key){
+    clearNavActive();
+    if(key && links[key]){ currentActive = links[key]; currentActive.classList.add('active'); }
+  }
+  var currentView = 'home'; /* 路由初始化时写入 */
+
+  /* ---------- stagger：为容器内 .reveal 子元素设置错峰延迟 ---------- */
+  document.querySelectorAll('[data-stagger]').forEach(function(c){
+    var step = parseInt(c.getAttribute('data-stagger'),10) || 90;
+    Array.prototype.forEach.call(c.children, function(ch,i){
+      ch.style.setProperty('--d', (i*step)+'ms');
+    });
+  });
+
+  /* ---------- 入场动效：进入视口 .in，离开复位（滚回重播） ---------- */
+  var revealEls = document.querySelectorAll('.reveal, .reveal-photo');
+  if('IntersectionObserver' in window){
+    var revealObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        e.target.classList.toggle('in', e.isIntersecting);
+      });
+    }, {threshold:.15, rootMargin:'0px 0px -4% 0px'});
+    revealEls.forEach(function(el){ revealObs.observe(el); });
+
+    /* 章节级触发（S4 pill / S9 时间轴 / S10 流程 / S13 逐行） */
+    var secObs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        e.target.classList.toggle('in', e.isIntersecting);
+      });
+    }, {threshold:.15});
+    ['s4','s9','s10','s13'].forEach(function(id){
+      var s = document.getElementById(id);
+      if(s) secObs.observe(s);
+    });
+
+    /* 导航当前屏高亮（本轮⑯：仅主页视图由 IO 驱动；子页面高亮由路由置位） */
+    var navObs = new IntersectionObserver(function(entries){
+      if(currentView === 'scen') return;
+      entries.forEach(function(e){
+        if(e.isIntersecting) setActive(navMap[e.target.id] || null);
+      });
+    }, {rootMargin:'-45% 0px -50% 0px'});
+    document.querySelectorAll('#viewHome section[data-sec]').forEach(function(s){ navObs.observe(s); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  /* ---------- 滚动进度条（本轮⑯：分母=活动视图 scrollHeight，切换后重算） ---------- */
+  var bar = document.getElementById('progress');
+  function updateProgress(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    var p = h > 0 ? (window.scrollY / h) * 100 : 0;
+    bar.style.width = Math.min(100, Math.max(0, p)) + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
+
+  /* ---------- 本轮⑯：hash 路由（单文件双视图，file:// 可用，纯 DOM 显隐） ---------- */
+  var viewHome = document.getElementById('viewHome');
+  var viewScen = document.getElementById('viewScenarios');
+  var pagesHome = Array.prototype.slice.call(viewHome.querySelectorAll('.page'));
+  var pagesScen = Array.prototype.slice.call(viewScen.querySelectorAll('.page'));
+  var savedY = { home:0, scen:0 };
+  var baseTitle = document.title;
+  var scenTitle = '万店慧招 · 应用场景';
+
+  function jumpTo(y){ /* 即时跳转（'instant' 优先，旧引擎降级） */
+    try{ window.scrollTo({top:y, behavior:'instant'}); }
+    catch(_){ window.scrollTo(0, y); }
+  }
+  function scrollToAnchor(id, smooth){
+    var t = document.getElementById(id);
+    if(!t) return;
+    t.scrollIntoView({behavior: smooth ? 'smooth' : 'instant', block:'start'});
+  }
+  /* 主页导航高亮兼保：视图切回后 IO 未必立即补发，手动同步一次 */
+  function syncHomeNav(){
+    var mid = window.innerHeight * 0.5;
+    var hit = null;
+    document.querySelectorAll('#viewHome section[data-sec]').forEach(function(s){
+      var r = s.getBoundingClientRect();
+      if(r.top <= mid && r.bottom >= mid) hit = s.id;
+    });
+    setActive(hit ? (navMap[hit] || null) : null);
+  }
+
+  function parseHash(){
+    var h = location.hash || '';
+    var m;
+    if((m = h.match(/^#\/scenarios(?:\/(s1[012]))?$/))) return {view:'scen', anchor:m[1] || null};
+    if((m = h.match(/^#\/(s\d+|cta)?$/))) return {view:'home', anchor:(m[1] && m[1]!=='s1') ? m[1] : null};
+    if((m = h.match(/^#(s\d+|cta)$/))){ /* 旧版 #sN 直链兼容 */
+      var id = m[1];
+      if(id === 's10' || id === 's11' || id === 's12') return {view:'scen', anchor:id};
+      return {view:'home', anchor: id === 's1' ? null : id};
+    }
+    return {view:'home', anchor:null};
+  }
+
+  function applyRoute(){
+    var r = parseHash();
+    var sameView = (r.view === currentView);
+    if(!sameView) savedY[currentView] = window.scrollY; /* 离开前记录位置 */
+    currentView = r.view;
+    viewHome.style.display = r.view === 'home' ? '' : 'none';
+    viewScen.style.display = r.view === 'scen' ? 'block' : 'none';
+    document.title = r.view === 'scen' ? scenTitle : baseTitle;
+    if(r.view === 'scen') setActive('scenarios'); else setActive(null); /* 主页高亮随后由 IO 重新驱动 */
+    /* 先切视图再定位：双 rAF 等新视图布局完成（跨视图即时，同视图平滑） */
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      if(r.anchor){
+        scrollToAnchor(r.anchor, sameView && !reduced);
+        /* 懒加载图片可能改变高度，跨视图/首次时延迟再校正一次 */
+        if(!sameView) setTimeout(function(){ scrollToAnchor(r.anchor, false); }, 80);
+      } else if(!sameView){
+        jumpTo(savedY[r.view] || 0); /* 跨视图回位：强制即时，避免 html scroll-behavior:smooth 全屏平滑飞越 */
+      }
+      updateProgress();
+      if(r.view === 'home') syncHomeNav();
+    });});
+  }
+  window.addEventListener('hashchange', applyRoute);
+  /* hash 未变时重复点击同目标：手动重新定位 */
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if(!a) return;
+    var href = a.getAttribute('href');
+    if(href && (href === location.hash || (href === '#/' && !location.hash))){
+      e.preventDefault();
+      closeMenu();
+      var rr = parseHash();
+      if(rr.anchor) scrollToAnchor(rr.anchor, !reduced);
+      else jumpTo(0); /* 同 hash 重复点击=回该视图顶部 */
+    }
+  });
+
+  /* ---------- 平滑滚动到指定 id（本轮⑯：跨视图统一走 hash 路由） ---------- */
+  function navigateTo(id){
+    var target;
+    if(id === 's10' || id === 's11' || id === 's12') target = '#/scenarios/' + id;
+    else if(!id || id === 's1') target = '#/';
+    else target = '#/' + id;
+    if(target === location.hash || (target === '#/' && !location.hash)){
+      var rr2 = parseHash();
+      if(rr2.anchor) scrollToAnchor(rr2.anchor, !reduced);
+      else jumpTo(0);
+    }
+    else location.hash = target;
+  }
+  document.querySelectorAll('[data-goto]').forEach(function(b){
+    b.addEventListener('click', function(){
+      closeMenu();
+      navigateTo(b.getAttribute('data-goto'));
+    });
+  });
+  document.getElementById('navCta').addEventListener('click', function(){ navigateTo('cta'); });
+
+  /* ---------- 汉堡菜单 ---------- */
+  var header = document.getElementById('siteHeader');
+  var burger = document.getElementById('burger');
+  function closeMenu(){
+    header.classList.remove('menu-open');
+    burger.setAttribute('aria-expanded','false');
+  }
+  burger.addEventListener('click', function(){
+    var open = header.classList.toggle('menu-open');
+    burger.setAttribute('aria-expanded', open ? 'true':'false');
+  });
+  document.querySelectorAll('#mobileMenu a.m-link').forEach(function(a){
+    a.addEventListener('click', function(){ closeMenu(); });
+  });
+
+  /* ---------- 键盘导航：翻页 + F 全屏（本轮⑯：只在活动视图的屏间移动） ---------- */
+  function activePages(){ return currentView === 'scen' ? pagesScen : pagesHome; }
+  var navLock = false;
+  function currentPageIndex(){
+    var pages = activePages();
+    var y = window.scrollY + window.innerHeight * 0.4;
+    var idx = 0;
+    for(var i=0;i<pages.length;i++){
+      if(pages[i].offsetTop <= y) idx = i;
+    }
+    return idx;
+  }
+  function goTo(i){
+    if(navLock) return;
+    var pages = activePages();
+    i = Math.max(0, Math.min(pages.length-1, i));
+    navLock = true;
+    pages[i].scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'start'});
+    setTimeout(function(){ navLock = false; }, 850);
+  }
+  function toggleFullscreen(){
+    var d = document;
+    var el = d.documentElement;
+    if(!d.fullscreenElement && !d.webkitFullscreenElement){
+      if(el.requestFullscreen) el.requestFullscreen();
+      else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    } else {
+      if(d.exitFullscreen) d.exitFullscreen();
+      else if(d.webkitExitFullscreen) d.webkitExitFullscreen();
+    }
+  }
+  document.addEventListener('keydown', function(e){
+    if(e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if(k === 'f' || k === 'F'){
+      e.preventDefault();
+      toggleFullscreen();
+      return;
+    }
+    /* 焦点在可交互元素上时，Space 交给原生行为 */
+    if((k === ' ' || k === 'Spacebar') && e.target && e.target.closest && e.target.closest('a,button')) return;
+    var idx = currentPageIndex();
+    if(k === 'ArrowDown' || k === ' ' || k === 'Spacebar' || k === 'PageDown'){
+      e.preventDefault(); goTo(idx + 1);
+    } else if(k === 'ArrowUp' || k === 'PageUp'){
+      e.preventDefault(); goTo(idx - 1);
+    } else if(k === 'Home'){
+      e.preventDefault(); navLock = false; goTo(0);
+    } else if(k === 'End'){
+      e.preventDefault(); navLock = false; goTo(activePages().length - 1);
+    }
+  });
+
+  /* ---------- 路由初始化（按当前 hash 决定首屏视图，#/scenarios/s11 直达即定位） ---------- */
+  applyRoute();
+  updateProgress();
+})();
+</script>
+
+
+
+</body></html>
